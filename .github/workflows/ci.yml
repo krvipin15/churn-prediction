@@ -145,5 +145,4 @@ jobs:
           uv run mkdocs gh-deploy \
             --strict \
             --force \
-            --shell \
             -m "docs: deploy documentation from commit ${{ github.sha }}"
