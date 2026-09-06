@@ -1,0 +1,3219 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade MLOps pipeline and serving infrastructure for predicting customer churn.">
+      
+      
+      
+      
+        <link rel="prev" href="../features/">
+      
+      
+        <link rel="next" href="../pipelines/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Model - Churn Prediction</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Churn Prediction" class="md-header__button md-logo" aria-label="Churn Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Churn Prediction
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/krvipin15/churn-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    krvipin15/churn-prediction
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../deployment/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../config/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Churn Prediction" class="md-nav__button md-logo" aria-label="Churn Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Churn Prediction
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/krvipin15/churn-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    krvipin15/churn-prediction
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.model.training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        training
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="training">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.training.train_xgb_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        train_xgb_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.training.unscale_probabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        unscale_probabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.model.inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.inference.run_inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        explainability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="explainability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability.SHAPArtifactExporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SHAPArtifactExporter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SHAPArtifactExporter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability.SHAPArtifactExporter.export_artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export_artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability.generate_shap_artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_shap_artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.model.training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        training
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="training">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.training.train_xgb_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        train_xgb_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.training.unscale_probabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        unscale_probabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.model.inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.inference.run_inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        explainability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="explainability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability.SHAPArtifactExporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SHAPArtifactExporter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SHAPArtifactExporter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability.SHAPArtifactExporter.export_artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export_artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.model.explainability.generate_shap_artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_shap_artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="model">Model<a class="headerlink" href="#model" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.model.training" class="doc doc-heading">
+            <code>churn_prediction.model.training</code>
+
+
+<a href="#churn_prediction.model.training" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>XGBoost Training Module.</p>
+<p>This module provides functionality to train an XGBoost model
+for churn prediction, evaluate its performance, and generate
+a comprehensive model card in JSON format.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.model.training.train_xgb_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">train_xgb_model</span><span class="p">(</span><span class="n">train_data_path</span><span class="p">,</span> <span class="n">val_data_path</span><span class="p">,</span> <span class="n">model_filepath</span><span class="p">,</span> <span class="n">model_card_path</span><span class="p">,</span> <span class="n">report_path</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.model.training.train_xgb_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Train, evaluate, and export the churn prediction XGBoost model.</p>
+<p>Orchestrates the complete model training stage by loading processed
+datasets, constructing XGBoost matrices, calculating class-imbalance
+weighting, training the booster, evaluating validation performance,
+and exporting the model, model card, and training report.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>train_data_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the processed training Parquet dataset.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>val_data_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the processed validation Parquet dataset.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model_filepath</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Destination path for the trained XGBoost model.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model_card_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Destination path for the machine-readable model card.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>report_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Destination path for the comprehensive training report.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If either processed dataset cannot be found.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="RuntimeError">RuntimeError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If model training, model serialization, model-card generation, or
+training-report generation fails.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the processed datasets are incompatible with the configured
+training schema or model.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/model/training.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
+<span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span>
+<span class="normal">737</span>
+<span class="normal">738</span>
+<span class="normal">739</span>
+<span class="normal">740</span>
+<span class="normal">741</span>
+<span class="normal">742</span>
+<span class="normal">743</span>
+<span class="normal">744</span>
+<span class="normal">745</span>
+<span class="normal">746</span>
+<span class="normal">747</span>
+<span class="normal">748</span>
+<span class="normal">749</span>
+<span class="normal">750</span>
+<span class="normal">751</span>
+<span class="normal">752</span>
+<span class="normal">753</span>
+<span class="normal">754</span>
+<span class="normal">755</span>
+<span class="normal">756</span>
+<span class="normal">757</span>
+<span class="normal">758</span>
+<span class="normal">759</span>
+<span class="normal">760</span>
+<span class="normal">761</span>
+<span class="normal">762</span>
+<span class="normal">763</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span>
+<span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">train_xgb_model</span><span class="p">(</span>
+    <span class="n">train_data_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">val_data_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">model_filepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">model_card_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">report_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Train, evaluate, and export the churn prediction XGBoost model.</span>
+
+<span class="sd">    Orchestrates the complete model training stage by loading processed</span>
+<span class="sd">    datasets, constructing XGBoost matrices, calculating class-imbalance</span>
+<span class="sd">    weighting, training the booster, evaluating validation performance,</span>
+<span class="sd">    and exporting the model, model card, and training report.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    train_data_path : str or pathlib.Path</span>
+<span class="sd">        Path to the processed training Parquet dataset.</span>
+<span class="sd">    val_data_path : str or pathlib.Path</span>
+<span class="sd">        Path to the processed validation Parquet dataset.</span>
+<span class="sd">    model_filepath : str or pathlib.Path</span>
+<span class="sd">        Destination path for the trained XGBoost model.</span>
+<span class="sd">    model_card_path : str or pathlib.Path</span>
+<span class="sd">        Destination path for the machine-readable model card.</span>
+<span class="sd">    report_path : str or pathlib.Path</span>
+<span class="sd">        Destination path for the comprehensive training report.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If either processed dataset cannot be found.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If model training, model serialization, model-card generation, or</span>
+<span class="sd">        training-report generation fails.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the processed datasets are incompatible with the configured</span>
+<span class="sd">        training schema or model.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+
+    <span class="c1"># Resolve paths to absolute paths</span>
+    <span class="n">train_data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">train_data_path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">val_data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">val_data_path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">model_filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_filepath</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">model_card_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_card_path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">report_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">report_path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">"Loading configuration from settings. Target: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">schema_config</span><span class="o">.</span><span class="n">target_column</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extract parameters from the validated pipeline configuration</span>
+    <span class="n">target_col</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">schema_config</span><span class="o">.</span><span class="n">target_column</span>
+    <span class="n">feature_cols</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">schema_config</span><span class="o">.</span><span class="n">feature_columns</span>
+    <span class="n">verbose_eval</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">verbose_eval</span>
+    <span class="n">num_boost_round</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">num_boost_round</span>
+    <span class="n">early_stopping_rounds</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">early_stopping_rounds</span>
+    <span class="n">classification_threshold</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">evaluate</span><span class="o">.</span><span class="n">classification_threshold</span>
+    <span class="n">xgb_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">xgb_params</span><span class="p">)</span>
+
+    <span class="c1"># 0. Load the datasets</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Reading Parquet files: train=</span><span class="si">%s</span><span class="s2">, val=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">train_data_path</span><span class="p">,</span> <span class="n">val_data_path</span><span class="p">)</span>
+    <span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">train_data_path</span><span class="p">)</span>
+    <span class="n">val_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">val_data_path</span><span class="p">)</span>
+    <span class="n">train_rows</span><span class="p">,</span> <span class="n">train_cols</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">val_rows</span><span class="p">,</span> <span class="n">val_cols</span> <span class="o">=</span> <span class="n">val_df</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># 1. Build DMatrix objects</span>
+    <span class="n">dtrain</span><span class="p">,</span> <span class="n">dval</span><span class="p">,</span> <span class="n">scale_pos_weight</span> <span class="o">=</span> <span class="n">_build_dmatrices</span><span class="p">(</span>
+        <span class="n">train_df</span><span class="p">,</span>
+        <span class="n">val_df</span><span class="p">,</span>
+        <span class="n">target_col</span><span class="p">,</span>
+        <span class="n">feature_cols</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 2. Train the model</span>
+    <span class="n">booster</span><span class="p">,</span> <span class="n">evals_result</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">_train_model</span><span class="p">(</span>
+        <span class="n">dtrain</span><span class="p">,</span>
+        <span class="n">dval</span><span class="p">,</span>
+        <span class="n">xgb_params</span><span class="o">=</span><span class="n">xgb_params</span><span class="p">,</span>
+        <span class="n">scale_pos_weight</span><span class="o">=</span><span class="n">scale_pos_weight</span><span class="p">,</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="n">num_boost_round</span><span class="p">,</span>
+        <span class="n">early_stopping_rounds</span><span class="o">=</span><span class="n">early_stopping_rounds</span><span class="p">,</span>
+        <span class="n">verbose_eval</span><span class="o">=</span><span class="n">verbose_eval</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 3. Evaluate the model</span>
+    <span class="n">metrics</span><span class="p">,</span> <span class="n">clf_report</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">feature_importances</span> <span class="o">=</span> <span class="n">_evaluate_model</span><span class="p">(</span>
+        <span class="n">booster</span><span class="p">,</span>
+        <span class="n">dval</span><span class="p">,</span>
+        <span class="n">scale_pos_weight</span><span class="o">=</span><span class="n">scale_pos_weight</span><span class="p">,</span>
+        <span class="n">classification_threshold</span><span class="o">=</span><span class="n">classification_threshold</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Unpack confusion matrix for clarity</span>
+    <span class="p">(</span><span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">),</span> <span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">tp</span><span class="p">)</span> <span class="o">=</span> <span class="n">cm</span>
+
+    <span class="n">sorted_importances</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">feature_importances</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="c1"># 4. Save the trained model</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Saving booster model to </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">model_filepath</span><span class="p">)</span>
+        <span class="n">booster</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model_filepath</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Trained model saved successfully to: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">model_filepath</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Failed to save the trained model: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Failed to save the trained model to '</span><span class="si">{</span><span class="n">model_filepath</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">model_filepath</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="n">model_filepath</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Model file is empty or does not exist: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">model_filepath</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model file is empty or does not exist: '</span><span class="si">{</span><span class="n">model_filepath</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+
+    <span class="c1"># 5. Generate and save model card</span>
+    <span class="n">_export_model_card</span><span class="p">(</span>
+        <span class="n">output_path</span><span class="o">=</span><span class="n">model_card_path</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+        <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+        <span class="n">clf_report</span><span class="o">=</span><span class="n">clf_report</span><span class="p">,</span>
+        <span class="n">feature_importances</span><span class="o">=</span><span class="n">sorted_importances</span><span class="p">,</span>
+        <span class="n">feature_columns</span><span class="o">=</span><span class="n">feature_cols</span><span class="p">,</span>
+        <span class="n">target_column</span><span class="o">=</span><span class="n">target_col</span><span class="p">,</span>
+        <span class="n">train_shape</span><span class="o">=</span><span class="n">train_df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+        <span class="n">val_shape</span><span class="o">=</span><span class="n">val_df</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+        <span class="n">train_data_path</span><span class="o">=</span><span class="n">train_data_path</span><span class="p">,</span>
+        <span class="n">val_data_path</span><span class="o">=</span><span class="n">val_data_path</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 6. Export comprehensive training report</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Exporting training report to </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">report_path</span><span class="p">)</span>
+
+        <span class="n">best_iter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">booster</span><span class="p">,</span> <span class="s2">"best_iteration"</span><span class="p">,</span> <span class="n">num_boost_round</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">best_score_raw</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">booster</span><span class="p">,</span> <span class="s2">"best_score"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
+        <span class="n">best_score</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_score_raw</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">best_score_raw</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">report_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"metadata"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"generated_at"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                <span class="s2">"target_column"</span><span class="p">:</span> <span class="n">target_col</span><span class="p">,</span>
+                <span class="s2">"feature_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_cols</span><span class="p">),</span>
+                <span class="s2">"feature_names"</span><span class="p">:</span> <span class="n">feature_cols</span><span class="p">,</span>
+                <span class="s2">"dataset_dimensions"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"train_rows"</span><span class="p">:</span> <span class="n">train_rows</span><span class="p">,</span>
+                    <span class="s2">"train_cols"</span><span class="p">:</span> <span class="n">train_cols</span><span class="p">,</span>
+                    <span class="s2">"val_rows"</span><span class="p">:</span> <span class="n">val_rows</span><span class="p">,</span>
+                    <span class="s2">"val_cols"</span><span class="p">:</span> <span class="n">val_cols</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">"class_imbalance"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"scale_pos_weight"</span><span class="p">:</span> <span class="n">scale_pos_weight</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">"training_summary"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"num_boost_round"</span><span class="p">:</span> <span class="n">num_boost_round</span><span class="p">,</span>
+                <span class="s2">"early_stopping_rounds"</span><span class="p">:</span> <span class="n">early_stopping_rounds</span><span class="p">,</span>
+                <span class="s2">"best_iteration"</span><span class="p">:</span> <span class="n">best_iter</span><span class="p">,</span>
+                <span class="s2">"best_score"</span><span class="p">:</span> <span class="n">best_score</span><span class="p">,</span>
+                <span class="s2">"hyperparameters"</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+                <span class="s2">"evals_result"</span><span class="p">:</span> <span class="n">evals_result</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">"performance_evaluation"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="o">**</span><span class="n">metrics</span><span class="p">,</span>
+                <span class="s2">"confusion_matrix_optimal_2x2"</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span>
+                <span class="s2">"confusion_matrix_unpacked"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"true_negatives"</span><span class="p">:</span> <span class="n">tn</span><span class="p">,</span>
+                    <span class="s2">"false_positives"</span><span class="p">:</span> <span class="n">fp</span><span class="p">,</span>
+                    <span class="s2">"false_negatives"</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span>
+                    <span class="s2">"true_positives"</span><span class="p">:</span> <span class="n">tp</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">"classification_report"</span><span class="p">:</span> <span class="n">clf_report</span><span class="p">,</span>
+                <span class="s2">"feature_importance_gain"</span><span class="p">:</span> <span class="n">sorted_importances</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="n">report_json_bytes</span> <span class="o">=</span> <span class="n">orjson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+            <span class="n">report_data</span><span class="p">,</span>
+            <span class="n">option</span><span class="o">=</span><span class="n">orjson</span><span class="o">.</span><span class="n">OPT_INDENT_2</span> <span class="o">|</span> <span class="n">orjson</span><span class="o">.</span><span class="n">OPT_SERIALIZE_NUMPY</span> <span class="o">|</span> <span class="n">orjson</span><span class="o">.</span><span class="n">OPT_NON_STR_KEYS</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">report_path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">report_json_bytes</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Training report exported successfully to: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">report_path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Failed to export training report: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to export training report to '</span><span class="si">{</span><span class="n">report_path</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.model.training.unscale_probabilities" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">unscale_probabilities</span><span class="p">(</span><span class="n">y_prob_scaled</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.model.training.unscale_probabilities" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert class-weighted probabilities to calibrated likelihoods.</p>
+<p>Reverses the probability distortion introduced by <code>scale_pos_weight</code>
+during model training. When no effective class weighting is present, the
+original probabilities are returned unchanged.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>y_prob_scaled</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probabilities predicted by the class-weighted model.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>scale_pos_weight</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Positive-class weighting factor used during model training.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probabilities adjusted to represent the estimated likelihood under
+the original class distribution.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/model/training.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unscale_probabilities</span><span class="p">(</span>
+    <span class="n">y_prob_scaled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">scale_pos_weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Convert class-weighted probabilities to calibrated likelihoods.</span>
+
+<span class="sd">    Reverses the probability distortion introduced by ``scale_pos_weight``</span>
+<span class="sd">    during model training. When no effective class weighting is present, the</span>
+<span class="sd">    original probabilities are returned unchanged.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_prob_scaled : numpy.ndarray</span>
+<span class="sd">        Probabilities predicted by the class-weighted model.</span>
+<span class="sd">    scale_pos_weight : float</span>
+<span class="sd">        Positive-class weighting factor used during model training.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Probabilities adjusted to represent the estimated likelihood under</span>
+<span class="sd">        the original class distribution.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">scale_pos_weight</span> <span class="o">==</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">scale_pos_weight</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"scale_pos_weight is </span><span class="si">%.4f</span><span class="s2">; skipping probability unscaling"</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">y_prob_scaled</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Unscaling probabilities using scale_pos_weight: </span><span class="si">%.4f</span><span class="s2">"</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">y_prob_scaled</span><span class="p">,</span> <span class="n">EPSILON</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">EPSILON</span><span class="p">)</span>
+    <span class="n">calibrated_p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">scale_pos_weight</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">"Probability range - Scaled: [</span><span class="si">%.4f</span><span class="s2">, </span><span class="si">%.4f</span><span class="s2">], Unscaled: [</span><span class="si">%.4f</span><span class="s2">, </span><span class="si">%.4f</span><span class="s2">]"</span><span class="p">,</span>
+        <span class="n">y_prob_scaled</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+        <span class="n">y_prob_scaled</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+        <span class="n">calibrated_p</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+        <span class="n">calibrated_p</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">calibrated_p</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.model.inference" class="doc doc-heading">
+            <code>churn_prediction.model.inference</code>
+
+
+<a href="#churn_prediction.model.inference" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>XGBoost Inference Module.</p>
+<p>This module provides the <code>run_inference</code> function, which takes
+a preprocessed DataFrame, a trained XGBoost booster model, and
+a path to a model card JSON file. It generates churn probabilities,
+calibrates them based on class imbalance, and applies a decision
+threshold to produce final predictions.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.model.inference.run_inference" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_inference</span><span class="p">(</span><span class="n">booster</span><span class="p">,</span> <span class="n">raw_filepath</span><span class="p">,</span> <span class="n">input_filepath</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">,</span> <span class="n">model_card_path</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.model.inference.run_inference" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate churn predictions for a processed inference dataset.</p>
+<p>Loads model metadata from the model card, generates raw XGBoost
+probabilities, reverses class-imbalance probability scaling, applies
+the configured decision threshold, and persists the resulting
+predictions alongside the original customer records.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>booster</code>
+            </td>
+            <td>
+                  <code><span title="xgboost.Booster">Booster</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trained XGBoost model used to generate predictions.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>raw_filepath</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the original raw input dataset.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>input_filepath</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the processed inference dataset supplied to the model.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>output_filepath</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Destination path for the generated prediction dataset.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model_card_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the JSON model card containing the class-imbalance weight
+and classification threshold.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the model card or required input files do not exist.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If required model metadata is missing or the inference data cannot
+be converted into an XGBoost input matrix.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="RuntimeError">RuntimeError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If prediction generation or output persistence fails.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/model/inference.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_inference</span><span class="p">(</span>
+    <span class="n">booster</span><span class="p">:</span> <span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">,</span>
+    <span class="n">raw_filepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">input_filepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">output_filepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">model_card_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generate churn predictions for a processed inference dataset.</span>
+
+<span class="sd">    Loads model metadata from the model card, generates raw XGBoost</span>
+<span class="sd">    probabilities, reverses class-imbalance probability scaling, applies</span>
+<span class="sd">    the configured decision threshold, and persists the resulting</span>
+<span class="sd">    predictions alongside the original customer records.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    booster : xgboost.Booster</span>
+<span class="sd">        Trained XGBoost model used to generate predictions.</span>
+<span class="sd">    raw_filepath : str or pathlib.Path</span>
+<span class="sd">        Path to the original raw input dataset.</span>
+<span class="sd">    input_filepath : str or pathlib.Path</span>
+<span class="sd">        Path to the processed inference dataset supplied to the model.</span>
+<span class="sd">    output_filepath : str or pathlib.Path</span>
+<span class="sd">        Destination path for the generated prediction dataset.</span>
+<span class="sd">    model_card_path : str or pathlib.Path</span>
+<span class="sd">        Path to the JSON model card containing the class-imbalance weight</span>
+<span class="sd">        and classification threshold.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the model card or required input files do not exist.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If required model metadata is missing or the inference data cannot</span>
+<span class="sd">        be converted into an XGBoost input matrix.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If prediction generation or output persistence fails.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+
+    <span class="c1"># Resolve paths to absolute paths</span>
+    <span class="n">raw_filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">raw_filepath</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">input_filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">input_filepath</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">output_filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">model_card_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_card_path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">model_card_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Model card file missing at: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">model_card_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model card not found at path: </span><span class="si">{</span><span class="n">model_card_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># 1. Load model card to retrieve threshold and scale_pos_weight</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading model metadata from card: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">model_card_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">model_card_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">model_card</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scale_pos_weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">model_card</span><span class="p">[</span><span class="s2">"model_details"</span><span class="p">][</span><span class="s2">"hyperparameters"</span><span class="p">][</span><span class="s2">"scale_pos_weight"</span><span class="p">])</span>
+        <span class="n">decision_thresholds</span> <span class="o">=</span> <span class="n">model_card</span><span class="p">[</span><span class="s2">"metrics"</span><span class="p">][</span><span class="s2">"decision_thresholds"</span><span class="p">]</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+            <span class="n">decision_thresholds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">"optimal_threshold"</span><span class="p">,</span> <span class="n">decision_thresholds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default_threshold"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">"Extracted model params - scale_pos_weight: </span><span class="si">%s</span><span class="s2">, threshold: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">scale_pos_weight</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Model card schema mismatch or missing values: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to extract required parameters from model card: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+
+    <span class="c1"># 2. Load the dataset</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Reading Parquet file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">input_filepath</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">input_filepath</span><span class="p">)</span>
+
+    <span class="c1"># 3. Create DMatrix for inference</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">feature_cols</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">.</span><span class="n">schema_config</span><span class="o">.</span><span class="n">feature_columns</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating DMatrix for </span><span class="si">%d</span><span class="s2"> features and </span><span class="si">%d</span><span class="s2"> rows"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_cols</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+        <span class="n">dtest</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">],</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_cols</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"DMatrix created successfully. Shapes: dtest=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">dtest</span><span class="o">.</span><span class="n">num_row</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Failed to create DMatrix: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to create DMatrix: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+
+    <span class="c1"># 4. Run inference using the booster model</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Executing model prediction via XGBoost booster"</span><span class="p">)</span>
+    <span class="n">raw_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">booster</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dtest</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Raw probabilities generated. Sample (first 3): </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">raw_probs</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="c1"># 5. Calibrate probabilities using scale_pos_weight</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Calibrating raw probabilities using scale_pos_weight=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="p">)</span>
+    <span class="n">calibrated_probs</span> <span class="o">=</span> <span class="n">unscale_probabilities</span><span class="p">(</span><span class="n">raw_probs</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Calibrated probabilities sample (first 3): </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">calibrated_probs</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="c1"># 6. Make predictions based on the calibrated probabilities and threshold</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Applying decision threshold: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="p">(</span><span class="n">calibrated_probs</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Log distribution of predictions for observability</span>
+    <span class="n">pos_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Inference complete. Predictions: </span><span class="si">%d</span><span class="s2"> churn, </span><span class="si">%d</span><span class="s2"> non-churn"</span><span class="p">,</span>
+        <span class="n">pos_count</span><span class="p">,</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span> <span class="o">-</span> <span class="n">pos_count</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 7. Prepare results DataFrame with churn probabilities and predictions</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Merging predictions back into results DataFrame"</span><span class="p">)</span>
+    <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">raw_filepath</span><span class="p">)</span>
+    <span class="n">results_df</span><span class="p">[</span><span class="s2">"churn_probability"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">calibrated_probs</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="n">results_df</span><span class="p">[</span><span class="s2">"churn_prediction"</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span>
+
+    <span class="c1"># 8. Save the results to the specified output file</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Saving predictions to CSV file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">)</span>
+    <span class="n">results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.model.explainability" class="doc doc-heading">
+            <code>churn_prediction.model.explainability</code>
+
+
+<a href="#churn_prediction.model.explainability" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Module for exporting SHAP explainability artifacts for dynamic dashboards.</p>
+<p>This module computes SHAP values for XGBoost models and exports structured,
+high-performance data artifacts (Parquet, JSON) designed for direct consumption
+by interactive frontend dashboards (e.g., Dash, React, FastAPI backends).</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="churn_prediction.model.explainability.SHAPArtifactExporter" class="doc doc-heading">
+              <code class="highlight language-python"><span class="n">SHAPArtifactExporter</span><span class="p">(</span><span class="n">batch_id</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">booster</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_samples</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.model.explainability.SHAPArtifactExporter" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Compute and export SHAP artifacts for churn model interpretation.</p>
+<p>This class transforms model predictions and SHAP explanations into
+dashboard-ready Parquet and JSON artifacts. It supports deterministic
+sampling for large datasets and produces both global feature importance
+metrics and customer-level churn/retention drivers.</p>
+
+        <p>Initialize the SHAP artifact exporter.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>batch_id</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Identifier for the current batch of explanations.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>df</code>
+            </td>
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Feature matrix containing the customer records to explain. The
+DataFrame index is treated as the customer identifier.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>booster</code>
+            </td>
+            <td>
+                  <code><span title="xgboost.Booster">Booster</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trained XGBoost booster for which SHAP explanations will be generated.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>output_dir</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Directory in which explainability artifacts will be written.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_samples</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of customer records to evaluate with SHAP. Larger
+datasets are sampled deterministically.</p>
+              </div>
+            </td>
+            <td>
+                  <code>10000</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>random_state</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Random seed used when sampling the evaluation dataset.</p>
+              </div>
+            </td>
+            <td>
+                  <code>42</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="Exception">Exception</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the SHAP tree explainer cannot be initialized for the supplied
+XGBoost model.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>src/churn_prediction/model/explainability.py</code></summary>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">batch_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">booster</span><span class="p">:</span> <span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">max_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialize the SHAP artifact exporter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    batch_id : str</span>
+<span class="sd">        Identifier for the current batch of explanations.</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        Feature matrix containing the customer records to explain. The</span>
+<span class="sd">        DataFrame index is treated as the customer identifier.</span>
+<span class="sd">    booster : xgboost.Booster</span>
+<span class="sd">        Trained XGBoost booster for which SHAP explanations will be generated.</span>
+<span class="sd">    output_dir : pathlib.Path</span>
+<span class="sd">        Directory in which explainability artifacts will be written.</span>
+<span class="sd">    max_samples : int, default=10000</span>
+<span class="sd">        Maximum number of customer records to evaluate with SHAP. Larger</span>
+<span class="sd">        datasets are sampled deterministically.</span>
+<span class="sd">    random_state : int, default=42</span>
+<span class="sd">        Random seed used when sampling the evaluation dataset.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If the SHAP tree explainer cannot be initialized for the supplied</span>
+<span class="sd">        XGBoost model.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Initialize logging and settings</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">"Initializing SHAPArtifactExporter: rows=</span><span class="si">%d</span><span class="s2">, features=</span><span class="si">%d</span><span class="s2">, output_dir=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">output_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_id</span> <span class="o">=</span> <span class="n">batch_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_samples</span> <span class="o">=</span> <span class="n">max_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customer_ids</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">booster</span> <span class="o">=</span> <span class="n">booster</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">booster</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Failed to initialize SHAPArtifactExporter"</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"SHAPArtifactExporter initialized: batch_id=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_id</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="churn_prediction.model.explainability.SHAPArtifactExporter.export_artifacts" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">export_artifacts</span><span class="p">(</span><span class="n">top_k_drivers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.model.explainability.SHAPArtifactExporter.export_artifacts" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate and persist dashboard-ready SHAP artifacts.</p>
+<p>The export contains the raw SHAP matrix, the aligned input feature
+matrix, customer-level risk profiles, and global feature-importance
+metadata.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>top_k_drivers</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of positive churn drivers and negative retention
+factors retained for each customer.</p>
+              </div>
+            </td>
+            <td>
+                  <code>5</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Directory containing all generated explainability artifacts.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="OSError">OSError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If an artifact cannot be written to disk.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="Exception">Exception</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If SHAP computation or artifact generation fails.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/model/explainability.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">export_artifacts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_k_drivers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generate and persist dashboard-ready SHAP artifacts.</span>
+
+<span class="sd">    The export contains the raw SHAP matrix, the aligned input feature</span>
+<span class="sd">    matrix, customer-level risk profiles, and global feature-importance</span>
+<span class="sd">    metadata.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    top_k_drivers : int, default=5</span>
+<span class="sd">        Maximum number of positive churn drivers and negative retention</span>
+<span class="sd">        factors retained for each customer.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pathlib.Path</span>
+<span class="sd">        Directory containing all generated explainability artifacts.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    OSError</span>
+<span class="sd">        If an artifact cannot be written to disk.</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If SHAP computation or artifact generation fails.</span>
+<span class="sd">    """</span>
+    <span class="n">batch_output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span>
+    <span class="n">batch_output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Starting SHAP artifact generation run: destination=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">batch_output_dir</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">eval_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_dataset</span><span class="p">()</span>
+        <span class="n">explanation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_shap_explanation</span><span class="p">(</span><span class="n">eval_df</span><span class="p">)</span>
+
+        <span class="c1"># 1. Export SHAP Value Matrix</span>
+        <span class="n">shap_cols</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"shap_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">explanation</span><span class="o">.</span><span class="n">feature_names</span><span class="p">]</span>
+        <span class="n">shap_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">explanation</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">shap_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">shap_values</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">shap_cols</span><span class="p">),</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sampled_customer_ids</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"customer_id"</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">shap_parquet_path</span> <span class="o">=</span> <span class="n">batch_output_dir</span> <span class="o">/</span> <span class="s2">"raw_shap_values.parquet"</span>
+        <span class="n">shap_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span>
+            <span class="n">shap_parquet_path</span><span class="p">,</span>
+            <span class="n">engine</span><span class="o">=</span><span class="s2">"pyarrow"</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="s2">"snappy"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Exported SHAP matrix: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">shap_parquet_path</span><span class="p">)</span>
+
+        <span class="c1"># 2. Export Feature Matrix (Aligned with SHAP Values)</span>
+        <span class="n">eval_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampled_customer_ids</span>
+        <span class="n">eval_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"customer_id"</span>
+        <span class="n">features_parquet_path</span> <span class="o">=</span> <span class="n">batch_output_dir</span> <span class="o">/</span> <span class="s2">"input_features.parquet"</span>
+        <span class="n">eval_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">features_parquet_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pyarrow"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"snappy"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Exported feature matrix: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">features_parquet_path</span><span class="p">)</span>
+
+        <span class="c1"># 3. Export Customer Risk Profiles (Top Drivers)</span>
+        <span class="n">risk_profiles_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_customer_risk_profiles</span><span class="p">(</span>
+            <span class="n">explanation</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span>
+            <span class="n">customer_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sampled_customer_ids</span><span class="p">,</span>
+            <span class="n">top_k</span><span class="o">=</span><span class="n">top_k_drivers</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">risk_parquet_path</span> <span class="o">=</span> <span class="n">batch_output_dir</span> <span class="o">/</span> <span class="s2">"customer_risk_profiles.parquet"</span>
+        <span class="n">risk_profiles_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">risk_parquet_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pyarrow"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"snappy"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Exported customer risk profiles: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">risk_parquet_path</span><span class="p">)</span>
+
+        <span class="c1"># 4. Export Metadata (Global Metrics)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_export_metadata</span><span class="p">(</span>
+            <span class="n">explanation</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="n">batch_output_dir</span> <span class="o">/</span> <span class="s2">"metadata.json"</span><span class="p">,</span>
+            <span class="n">total_samples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">eval_df</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Export run failed for output directory: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">batch_output_dir</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Successfully exported all SHAP artifacts to: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">batch_output_dir</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">batch_output_dir</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.model.explainability.generate_shap_artifacts" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">generate_shap_artifacts</span><span class="p">(</span><span class="n">batch_id</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">booster</span><span class="p">,</span> <span class="n">shap_report_dir</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.model.explainability.generate_shap_artifacts" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate SHAP explainability artifacts for a trained churn model.</p>
+<p>This is the public entry point for the explainability workflow. It
+initializes :class:<code>SHAPArtifactExporter</code>, computes the requested SHAP
+outputs, and persists the resulting artifacts to the configured report
+directory.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>batch_id</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Identifier for the current batch of explanations.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>df</code>
+            </td>
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Model feature matrix to explain.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>booster</code>
+            </td>
+            <td>
+                  <code><span title="xgboost.Booster">Booster</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trained XGBoost model.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shap_report_dir</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Directory in which SHAP artifacts will be generated.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Directory containing the generated SHAP artifacts.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="Exception">Exception</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If SHAP initialization, computation, or artifact export fails.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/model/explainability.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_shap_artifacts</span><span class="p">(</span>
+    <span class="n">batch_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">booster</span><span class="p">:</span> <span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">,</span>
+    <span class="n">shap_report_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generate SHAP explainability artifacts for a trained churn model.</span>
+
+<span class="sd">    This is the public entry point for the explainability workflow. It</span>
+<span class="sd">    initializes :class:`SHAPArtifactExporter`, computes the requested SHAP</span>
+<span class="sd">    outputs, and persists the resulting artifacts to the configured report</span>
+<span class="sd">    directory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    batch_id : str</span>
+<span class="sd">        Identifier for the current batch of explanations.</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        Model feature matrix to explain.</span>
+<span class="sd">    booster : xgboost.Booster</span>
+<span class="sd">        Trained XGBoost model.</span>
+<span class="sd">    shap_report_dir : pathlib.Path</span>
+<span class="sd">        Directory in which SHAP artifacts will be generated.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pathlib.Path</span>
+<span class="sd">        Directory containing the generated SHAP artifacts.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If SHAP initialization, computation, or artifact export fails.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exporter</span> <span class="o">=</span> <span class="n">SHAPArtifactExporter</span><span class="p">(</span>
+            <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+            <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+            <span class="n">booster</span><span class="o">=</span><span class="n">booster</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="o">=</span><span class="n">shap_report_dir</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export_artifacts</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Failed to complete SHAP artifact generation workflow."</span><span class="p">)</span>
+        <span class="k">raise</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

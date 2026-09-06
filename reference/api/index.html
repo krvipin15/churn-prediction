@@ -1,0 +1,3617 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade MLOps pipeline and serving infrastructure for predicting customer churn.">
+      
+      
+      
+      
+        <link rel="prev" href="../pipelines/">
+      
+      
+        <link rel="next" href="../client/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>API - Churn Prediction</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Churn Prediction" class="md-header__button md-logo" aria-label="Churn Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Churn Prediction
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/krvipin15/churn-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    krvipin15/churn-prediction
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../deployment/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../config/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Churn Prediction" class="md-nav__button md-logo" aria-label="Churn Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Churn Prediction
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/krvipin15/churn-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    krvipin15/churn-prediction
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="app">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.app.create_app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.app.lifespan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lifespan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.dependencies.get_encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_encoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.dependencies.get_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        predict
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="predict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict.PredictionResponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PredictionResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict.download_predictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        download_predictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict.predict_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        predict_batch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.explain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        explain
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="explain">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.explain.ExplainabilityResponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ExplainabilityResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.explain.generate_explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_explanation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        health
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.health.HealthResponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HealthResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.health.check_health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check_health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        app
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="app">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.app.create_app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.app.lifespan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lifespan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.dependencies.get_encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_encoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.dependencies.get_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        predict
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="predict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict.PredictionResponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PredictionResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict.download_predictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        download_predictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.predict.predict_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        predict_batch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.explain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        explain
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="explain">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.explain.ExplainabilityResponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ExplainabilityResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.explain.generate_explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_explanation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        health
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.health.HealthResponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HealthResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.api.routes.health.check_health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check_health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.api.app" class="doc doc-heading">
+            <code>churn_prediction.api.app</code>
+
+
+<a href="#churn_prediction.api.app" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>FastAPI application entry point for the Churn Prediction Batch Inference API.</p>
+<p>This module initializes the FastAPI application, configures global middleware,
+and manages the application lifecycle—specifically the loading and unloading
+of ML artifacts (OrdinalEncoder and XGBoost Booster) into the application state.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.app.create_app" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">create_app</span><span class="p">()</span></code>
+
+<a href="#churn_prediction.api.app.create_app" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Create and configure the FastAPI application.</p>
+<p>Initializes the application metadata, lifecycle management, CORS
+configuration, and API routers.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fastapi.FastAPI">FastAPI</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fully configured FastAPI application instance ready to serve
+prediction, explainability, download, and health endpoints.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/app.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">FastAPI</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create and configure the FastAPI application.</span>
+
+<span class="sd">    Initializes the application metadata, lifecycle management, CORS</span>
+<span class="sd">    configuration, and API routers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fastapi.FastAPI</span>
+<span class="sd">        Fully configured FastAPI application instance ready to serve</span>
+<span class="sd">        prediction, explainability, download, and health endpoints.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Creating FastAPI application instance..."</span><span class="p">)</span>
+
+    <span class="c1"># Fetch version from pyproject.toml via installed package metadata</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">app_version</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="s2">"churn-prediction"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">metadata</span><span class="o">.</span><span class="n">PackageNotFoundError</span><span class="p">:</span>
+        <span class="n">app_version</span> <span class="o">=</span> <span class="s2">"0.1.0-dev"</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Package version not found; defaulting to </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">app_version</span><span class="p">)</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">"Churn Prediction Batch Inference API"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"This API provides high-performance batch inference for customer churn modeling. "</span>
+            <span class="s2">"It utilizes a pre-trained XGBoost model and Scikit-Learn preprocessors to "</span>
+            <span class="s2">"predict the likelihood of customer attrition based on behavioral data."</span>
+        <span class="p">),</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">app_version</span><span class="p">,</span>
+        <span class="n">lifespan</span><span class="o">=</span><span class="n">lifespan</span><span class="p">,</span>
+        <span class="n">docs_url</span><span class="o">=</span><span class="s2">"/docs"</span><span class="p">,</span>
+        <span class="n">redoc_url</span><span class="o">=</span><span class="s2">"/redoc"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Configure CORS middleware to allow requests from any origin</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Configuring CORSMiddleware with allow_origins=['*']"</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+        <span class="n">CORSMiddleware</span><span class="p">,</span>
+        <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span>
+        <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span>
+        <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Register routers for health checks and prediction endpoints</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Registering API routers: health, predict, explain"</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">health</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">predict</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">explain</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"FastAPI application created successfully."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.app.lifespan" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#churn_prediction.api.app.lifespan" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Manage startup and shutdown of the FastAPI application.</p>
+<p>During startup, loads the fitted preprocessing encoder and trained
+XGBoost model from the configured artifact directory and stores them in
+<code>app.state</code> for dependency injection.</p>
+<p>During shutdown, clears the references from application state so that
+model artifacts can be released from memory.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>app</code>
+            </td>
+            <td>
+                  <code><span title="fastapi.FastAPI">FastAPI</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>FastAPI application instance whose lifecycle is being managed.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Yields:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Control is yielded to the running FastAPI application after all
+required ML artifacts have been loaded.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the required model, preprocessing artifact, or demonstration
+dataset cannot be found.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="Exception">Exception</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If an ML artifact cannot be loaded successfully.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/app.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Manage startup and shutdown of the FastAPI application.</span>
+
+<span class="sd">    During startup, loads the fitted preprocessing encoder and trained</span>
+<span class="sd">    XGBoost model from the configured artifact directory and stores them in</span>
+<span class="sd">    ``app.state`` for dependency injection.</span>
+
+<span class="sd">    During shutdown, clears the references from application state so that</span>
+<span class="sd">    model artifacts can be released from memory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    app : fastapi.FastAPI</span>
+<span class="sd">        FastAPI application instance whose lifecycle is being managed.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    None</span>
+<span class="sd">        Control is yielded to the running FastAPI application after all</span>
+<span class="sd">        required ML artifacts have been loaded.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the required model, preprocessing artifact, or demonstration</span>
+<span class="sd">        dataset cannot be found.</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If an ML artifact cannot be loaded successfully.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+
+    <span class="c1"># Resolve base directory</span>
+    <span class="n">demo_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">RAW_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">model_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Initializing application lifespan. Model directory: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">model_dir</span><span class="p">)</span>
+
+    <span class="c1"># Derive specific file paths</span>
+    <span class="n">demo_data_path</span> <span class="o">=</span> <span class="n">demo_dir</span> <span class="o">/</span> <span class="s2">"test.csv"</span>
+    <span class="n">preprocessor_path</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"preprocessor.joblib"</span>
+    <span class="n">model_path</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"model.ubj"</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Looking for artifacts - Demo Data: </span><span class="si">%s</span><span class="s2">, Preprocessor: </span><span class="si">%s</span><span class="s2">, Model: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">demo_data_path</span><span class="p">,</span>
+        <span class="n">preprocessor_path</span><span class="p">,</span>
+        <span class="n">model_path</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Check for the existence of the required artifacts</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">demo_data_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">preprocessor_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">model_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+            <span class="s2">"No artifacts found. Clone the repository `krvipin15/churn-prediction` </span><span class="se">\</span>
+<span class="s2">            and run `dvc repro` first to generate the required files."</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+            <span class="s2">"Required artifacts doesn't exists; Clone the repository `krvipin15/churn-prediction` </span><span class="se">\</span>
+<span class="s2">            and run `dvc repro` first to generate the required files."</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Load the pre-fitted encoder and XGBoost model</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading preprocessor artifact (joblib)..."</span><span class="p">)</span>
+        <span class="n">encoder</span><span class="p">:</span> <span class="n">OrdinalEncoder</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">preprocessor_path</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading XGBoost booster model..."</span><span class="p">)</span>
+        <span class="n">booster</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">()</span>
+        <span class="n">booster</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+
+        <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">booster</span> <span class="o">=</span> <span class="n">booster</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Successfully loaded all ML artifacts into memory."</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Critical error loading ML artifacts: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="k">yield</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Shutting down application. Clearing app state..."</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">booster</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Application state cleared."</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.api.dependencies" class="doc doc-heading">
+            <code>churn_prediction.api.dependencies</code>
+
+
+<a href="#churn_prediction.api.dependencies" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Model and Encoder Dependency Providers.</p>
+<p>This module contains utility functions used as FastAPI dependencies to retrieve
+the preprocessor (OrdinalEncoder) and the predictive model (XGBoost Booster)
+from the application state. It ensures that these artifacts are properly loaded
+before being used in request handlers, raising HTTP 503 errors if they are missing.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.dependencies.get_encoder" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_encoder</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.api.dependencies.get_encoder" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Retrieve the fitted encoder from FastAPI application state.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>request</code>
+            </td>
+            <td>
+                  <code><span title="fastapi.Request">Request</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Incoming FastAPI request providing access to the application state.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="sklearn.preprocessing.OrdinalEncoder">OrdinalEncoder</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fitted ordinal encoder loaded during application startup.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fastapi.HTTPException">HTTPException</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>HTTP 503 error if the encoder has not been loaded into application
+state.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/dependencies.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_encoder</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrdinalEncoder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Retrieve the fitted encoder from FastAPI application state.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    request : fastapi.Request</span>
+<span class="sd">        Incoming FastAPI request providing access to the application state.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sklearn.preprocessing.OrdinalEncoder</span>
+<span class="sd">        Fitted ordinal encoder loaded during application startup.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    fastapi.HTTPException</span>
+<span class="sd">        HTTP 503 error if the encoder has not been loaded into application</span>
+<span class="sd">        state.</span>
+<span class="sd">    """</span>
+    <span class="n">encoder</span><span class="p">:</span> <span class="n">OrdinalEncoder</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s2">"encoder"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">encoder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_503_SERVICE_UNAVAILABLE</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="s2">"Encoder artifact is not loaded in memory."</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">encoder</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.dependencies.get_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_model</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.api.dependencies.get_model" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Retrieve the trained XGBoost model from application state.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>request</code>
+            </td>
+            <td>
+                  <code><span title="fastapi.Request">Request</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Incoming FastAPI request providing access to the application state.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="xgboost.Booster">Booster</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trained XGBoost booster loaded during application startup.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fastapi.HTTPException">HTTPException</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>HTTP 503 error if the model has not been loaded into application
+state.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/dependencies.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Retrieve the trained XGBoost model from application state.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    request : fastapi.Request</span>
+<span class="sd">        Incoming FastAPI request providing access to the application state.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xgboost.Booster</span>
+<span class="sd">        Trained XGBoost booster loaded during application startup.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    fastapi.HTTPException</span>
+<span class="sd">        HTTP 503 error if the model has not been loaded into application</span>
+<span class="sd">        state.</span>
+<span class="sd">    """</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s2">"booster"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_503_SERVICE_UNAVAILABLE</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="s2">"XGBoost model artifact is not loaded in memory."</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.api.routes.predict" class="doc doc-heading">
+            <code>churn_prediction.api.routes.predict</code>
+
+
+<a href="#churn_prediction.api.routes.predict" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Inference API Module.</p>
+<p>This module defines the FastAPI router and endpoints for generating batch
+predictions using a pre-trained XGBoost model and a scikit-learn OrdinalEncoder.
+It handles CSV file uploads, converts the incoming CSV payload into an optimized
+Parquet file on disk asynchronously, triggers the prediction pipeline, and provides
+a mechanism to download prediction artifacts.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="churn_prediction.api.routes.predict.PredictionResponse" class="doc doc-heading">
+            <code>PredictionResponse</code>
+
+
+<a href="#churn_prediction.api.routes.predict.PredictionResponse" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <p>Response model for the prediction endpoint.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.routes.predict.download_predictions" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">download_predictions</span><span class="p">(</span><span class="n">batch_id</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#churn_prediction.api.routes.predict.download_predictions" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the generated prediction CSV for a batch.</p>
+<p>Locates the prediction artifact associated with <code>batch_id</code> and returns
+it as a downloadable HTTP file response.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>batch_id</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Unique prediction batch identifier used to locate the output artifact.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fastapi.responses.FileResponse">FileResponse</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>HTTP response containing the generated prediction CSV.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fastapi.HTTPException">HTTPException</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>HTTP 400 if <code>batch_id</code> violates the expected identifier format or
+represents an unsafe path.
+HTTP 404 if the corresponding prediction artifact does not exist.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/routes/predict.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@router</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s2">"/predictions/download/</span><span class="si">{batch_id}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="n">response_class</span><span class="o">=</span><span class="n">FileResponse</span><span class="p">,</span>
+    <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span>
+    <span class="n">summary</span><span class="o">=</span><span class="s2">"Download Prediction Results"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">"Fetch the generated predictions CSV file using the filename provided as a query parameter. "</span>
+        <span class="s2">"Ensures that the requested file exists within the secure predictions directory "</span>
+        <span class="s2">"and prevents directory traversal attacks."</span>
+    <span class="p">),</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">:</span> <span class="p">{</span><span class="s2">"description"</span><span class="p">:</span> <span class="s2">"CSV file successfully retrieved"</span><span class="p">},</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">:</span> <span class="p">{</span><span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Invalid file path or security violation"</span><span class="p">},</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">:</span> <span class="p">{</span><span class="s2">"description"</span><span class="p">:</span> <span class="s2">"The requested prediction file was not found"</span><span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">download_predictions</span><span class="p">(</span>
+    <span class="n">batch_id</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="nb">str</span><span class="p">,</span>
+        <span class="n">PathParam</span><span class="p">(</span>
+            <span class="o">...</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Unique execution batch identifier"</span><span class="p">,</span>
+            <span class="n">pattern</span><span class="o">=</span><span class="n">BATCH_ID_PATTERN</span><span class="p">,</span>
+            <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FileResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return the generated prediction CSV for a batch.</span>
+
+<span class="sd">    Locates the prediction artifact associated with ``batch_id`` and returns</span>
+<span class="sd">    it as a downloadable HTTP file response.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    batch_id : str</span>
+<span class="sd">        Unique prediction batch identifier used to locate the output artifact.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fastapi.responses.FileResponse</span>
+<span class="sd">        HTTP response containing the generated prediction CSV.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    fastapi.HTTPException</span>
+<span class="sd">        HTTP 400 if ``batch_id`` violates the expected identifier format or</span>
+<span class="sd">        represents an unsafe path.</span>
+<span class="sd">        HTTP 404 if the corresponding prediction artifact does not exist.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Download artifact requested for batch_id: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">)</span>
+
+    <span class="n">prediction_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PREDICTION_DATA_DIR</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">target_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"prediction_</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">.csv"</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">prediction_dir</span> <span class="o">/</span> <span class="n">target_filename</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">prediction_dir</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Attempted directory traversal attack: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">"Invalid file path"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Requested prediction download artifact not found: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Prediction artifact for batch '</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">' not found."</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Serving prediction file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FileResponse</span><span class="p">(</span>
+        <span class="n">path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+        <span class="n">media_type</span><span class="o">=</span><span class="s2">"text/csv"</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">target_filename</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.routes.predict.predict_batch" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">predict_batch</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#churn_prediction.api.routes.predict.predict_batch" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Process an uploaded dataset and initiate batch churn prediction.</p>
+<p>Accepts a customer CSV upload, persists the input data, executes the
+prediction pipeline using the pre-loaded encoder and XGBoost model, and
+returns metadata identifying the generated prediction batch.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>file</code>
+            </td>
+            <td>
+                  <code><span title="fastapi.UploadFile">UploadFile</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Uploaded CSV file containing customer records to score.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>encoder</code>
+            </td>
+            <td>
+                  <code><span title="sklearn.preprocessing.OrdinalEncoder">OrdinalEncoder</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pre-fitted encoder used to transform categorical input features.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model</code>
+            </td>
+            <td>
+                  <code><span title="xgboost.Booster">Booster</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trained XGBoost booster used to generate churn predictions.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="PredictionResponse (churn_prediction.api.routes.predict.PredictionResponse)" href="#churn_prediction.api.routes.predict.PredictionResponse">PredictionResponse</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Response containing the batch identifier, original filename,
+processing status, number of records, and prediction download URL.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fastapi.HTTPException">HTTPException</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the uploaded file is invalid, cannot be persisted, or the
+prediction pipeline fails.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If CSV-to-Parquet conversion or dataset preprocessing fails.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.errors.ParserError">ParserError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the uploaded CSV cannot be parsed.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/routes/predict.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="s2">"/predict/batch"</span><span class="p">,</span>
+    <span class="n">response_model</span><span class="o">=</span><span class="n">PredictionResponse</span><span class="p">,</span>
+    <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span>
+    <span class="n">summary</span><span class="o">=</span><span class="s2">"Execute Batch Prediction Job"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">"Upload a CSV file containing feature records to generate churn predictions. "</span>
+        <span class="s2">"The system validates the file format, persists it to storage, and executes "</span>
+        <span class="s2">"the prediction pipeline using a pre-loaded XGBoost model and OrdinalEncoder. "</span>
+        <span class="s2">"Returns a `batch_id` which can be used to download the results."</span>
+    <span class="p">),</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">:</span> <span class="p">{</span><span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Predictions successfully generated"</span><span class="p">},</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">:</span> <span class="p">{</span><span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Invalid file format provided"</span><span class="p">},</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_422_UNPROCESSABLE_CONTENT</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Pipeline failed during feature transformation or inference"</span>
+        <span class="p">},</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_500_INTERNAL_SERVER_ERROR</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Internal server error while persisting file"</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">predict_batch</span><span class="p">(</span>
+    <span class="n">file</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">UploadFile</span><span class="p">,</span> <span class="n">File</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"CSV File containing tabular feature records"</span><span class="p">)],</span>
+    <span class="n">encoder</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">OrdinalEncoder</span><span class="p">,</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_encoder</span><span class="p">)],</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">,</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_model</span><span class="p">)],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PredictionResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Process an uploaded dataset and initiate batch churn prediction.</span>
+
+<span class="sd">    Accepts a customer CSV upload, persists the input data, executes the</span>
+<span class="sd">    prediction pipeline using the pre-loaded encoder and XGBoost model, and</span>
+<span class="sd">    returns metadata identifying the generated prediction batch.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file : fastapi.UploadFile</span>
+<span class="sd">        Uploaded CSV file containing customer records to score.</span>
+<span class="sd">    encoder : sklearn.preprocessing.OrdinalEncoder</span>
+<span class="sd">        Pre-fitted encoder used to transform categorical input features.</span>
+<span class="sd">    model : xgboost.Booster</span>
+<span class="sd">        Trained XGBoost booster used to generate churn predictions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    PredictionResponse</span>
+<span class="sd">        Response containing the batch identifier, original filename,</span>
+<span class="sd">        processing status, number of records, and prediction download URL.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    fastapi.HTTPException</span>
+<span class="sd">        If the uploaded file is invalid, cannot be persisted, or the</span>
+<span class="sd">        prediction pipeline fails.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If CSV-to-Parquet conversion or dataset preprocessing fails.</span>
+<span class="sd">    pandas.errors.ParserError</span>
+<span class="sd">        If the uploaded CSV cannot be parsed.</span>
+<span class="sd">    """</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+
+    <span class="c1"># Generate a unique batch identifier for this prediction job</span>
+    <span class="n">batch_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span><span class="si">:</span><span class="s2">%Y%m%dT%H%M%S</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">original_filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">filename</span> <span class="k">else</span> <span class="s2">"upload.csv"</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Received batch prediction request. Batch ID: </span><span class="si">%s</span><span class="s2">, Filename: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">batch_id</span><span class="p">,</span>
+        <span class="n">original_filename</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Validate the uploaded file format</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">original_filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".csv"</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Invalid file upload attempt: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="s2">"Invalid file format. Please upload a valid CSV file (.csv)."</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Persist the uploaded CSV file to the designated raw data directory</span>
+    <span class="n">raw_file_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">RAW_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">clean_stem</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">original_filename</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+    <span class="n">raw_file_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw_file_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">clean_stem</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Persisting uploaded file to: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">raw_file_path</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">run_in_threadpool</span><span class="p">(</span>
+            <span class="n">_to_parquet</span><span class="p">,</span>
+            <span class="n">file_obj</span><span class="o">=</span><span class="n">file</span><span class="o">.</span><span class="n">file</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="n">raw_file_path</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Successfully persisted file to disk."</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">EmptyDataError</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">parse_err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Corrupted or malformed CSV upload: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">parse_err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Failed to parse CSV payload: </span><span class="si">{</span><span class="n">parse_err</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">parse_err</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Failed to write uploaded file to disk: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_500_INTERNAL_SERVER_ERROR</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Failed to persist uploaded payload: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Run the prediction pipeline in a separate thread to avoid blocking the event loop</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Triggering prediction pipeline for batch </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">run_in_threadpool</span><span class="p">(</span>
+            <span class="n">run_prediction_pipeline</span><span class="p">,</span>
+            <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+            <span class="n">raw_file_path</span><span class="o">=</span><span class="n">raw_file_path</span><span class="p">,</span>
+            <span class="n">loaded_encoder</span><span class="o">=</span><span class="n">encoder</span><span class="p">,</span>
+            <span class="n">loaded_booster</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Prediction pipeline completed successfully for batch </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">pipeline_err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Batch prediction execution failed: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">pipeline_err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_422_UNPROCESSABLE_CONTENT</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Batch execution pipeline failed: </span><span class="si">{</span><span class="n">pipeline_err</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pipeline_err</span>
+
+    <span class="k">return</span> <span class="n">PredictionResponse</span><span class="p">(</span>
+        <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">original_filename</span><span class="p">,</span>
+        <span class="n">status</span><span class="o">=</span><span class="s2">"SUCCESS"</span><span class="p">,</span>
+        <span class="n">download_url</span><span class="o">=</span><span class="sa">f</span><span class="s2">"/api/v1/predictions/download/</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.api.routes.explain" class="doc doc-heading">
+            <code>churn_prediction.api.routes.explain</code>
+
+
+<a href="#churn_prediction.api.routes.explain" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Explainability API Module.</p>
+<p>This module provides endpoints to generate model interpretability reports using
+SHAP (SHapley Additive exPlanations) values for the churn prediction model.
+It integrates with the XGBoost booster and processed datasets to visualize
+feature contributions.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="churn_prediction.api.routes.explain.ExplainabilityResponse" class="doc doc-heading">
+            <code>ExplainabilityResponse</code>
+
+
+<a href="#churn_prediction.api.routes.explain.ExplainabilityResponse" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <p>Response model for the explainability endpoint.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.routes.explain.generate_explanation" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">generate_explanation</span><span class="p">(</span><span class="n">batch_id</span><span class="p">,</span> <span class="n">xgb_booster</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#churn_prediction.api.routes.explain.generate_explanation" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate SHAP explainability artifacts for a prediction batch.</p>
+<p>Loads the processed input features associated with the specified batch,
+computes SHAP explanations using the supplied XGBoost booster, and
+persists dashboard-ready explainability artifacts.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>batch_id</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Unique identifier of the prediction batch to explain.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>xgb_booster</code>
+            </td>
+            <td>
+                  <code><span title="xgboost.Booster">Booster</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trained XGBoost model used to calculate SHAP contributions.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ExplainabilityResponse (churn_prediction.api.routes.explain.ExplainabilityResponse)" href="#churn_prediction.api.routes.explain.ExplainabilityResponse">ExplainabilityResponse</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Response containing the batch identifier and location of the
+generated explainability artifacts.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fastapi.HTTPException">HTTPException</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>HTTP 404 if the batch input artifact does not exist.
+HTTP 500 if data loading or SHAP artifact generation fails.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/routes/explain.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="s2">"/explain/</span><span class="si">{batch_id}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="n">response_model</span><span class="o">=</span><span class="n">ExplainabilityResponse</span><span class="p">,</span>
+    <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span>
+    <span class="n">summary</span><span class="o">=</span><span class="s2">"Generate SHAP Explainability Plots"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">"Generates SHAP explainability plots for the churn prediction model using "</span>
+        <span class="s2">"the processed dataset corresponding to the current session. The plots are "</span>
+        <span class="s2">"saved to disk, and the endpoint returns the path to the generated plots."</span>
+    <span class="p">),</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Successfully generated SHAP explainability plots."</span><span class="p">,</span>
+            <span class="s2">"model"</span><span class="p">:</span> <span class="n">ExplainabilityResponse</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Processed data file for the current session not found."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_500_INTERNAL_SERVER_ERROR</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"An unexpected error occurred during plot generation."</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_explanation</span><span class="p">(</span>
+    <span class="n">batch_id</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="nb">str</span><span class="p">,</span>
+        <span class="n">PathParam</span><span class="p">(</span>
+            <span class="o">...</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Unique identifier for the target processing batch"</span><span class="p">,</span>
+            <span class="n">pattern</span><span class="o">=</span><span class="n">BATCH_ID_PATTERN</span><span class="p">,</span>
+            <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">xgb_booster</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">,</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_model</span><span class="p">)],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExplainabilityResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generate SHAP explainability artifacts for a prediction batch.</span>
+
+<span class="sd">    Loads the processed input features associated with the specified batch,</span>
+<span class="sd">    computes SHAP explanations using the supplied XGBoost booster, and</span>
+<span class="sd">    persists dashboard-ready explainability artifacts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    batch_id : str</span>
+<span class="sd">        Unique identifier of the prediction batch to explain.</span>
+<span class="sd">    xgb_booster : xgboost.Booster</span>
+<span class="sd">        Trained XGBoost model used to calculate SHAP contributions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ExplainabilityResponse</span>
+<span class="sd">        Response containing the batch identifier and location of the</span>
+<span class="sd">        generated explainability artifacts.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    fastapi.HTTPException</span>
+<span class="sd">        HTTP 404 if the batch input artifact does not exist.</span>
+<span class="sd">        HTTP 500 if data loading or SHAP artifact generation fails.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Initialize logger and settings</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+
+    <span class="n">base_processed_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROCESSED_DATA_DIR</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">base_artifacts_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SHAP_REPORT_DIR</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="n">processed_filepath</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_processed_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"processed_</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Resolved processed_filepath: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">processed_filepath</span><span class="p">)</span>
+
+    <span class="n">artifacts_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_artifacts_dir</span> <span class="o">/</span> <span class="n">batch_id</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Resolved artifacts_dir: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">artifacts_dir</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Load the processed data</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">processed_filepath</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Processed data file not found: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">processed_filepath</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+                <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">,</span>
+                <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Processed data for batch </span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2"> not found at </span><span class="si">{</span><span class="n">processed_filepath</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Load the processed data into a DataFrame</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Loading processed data from </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">processed_filepath</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">processed_filepath</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loaded dataframe with shape: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Generate SHAP explainability plots</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Generating SHAP plots for batch: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">)</span>
+        <span class="n">generate_shap_artifacts</span><span class="p">(</span><span class="n">batch_id</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">xgb_booster</span><span class="p">,</span> <span class="n">artifacts_dir</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Successfully generated SHAP plots at: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">artifacts_dir</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ExplainabilityResponse</span><span class="p">(</span>
+            <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+            <span class="n">status</span><span class="o">=</span><span class="s2">"success"</span><span class="p">,</span>
+            <span class="n">artifacts_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">artifacts_dir</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">HTTPException</span><span class="p">:</span>
+        <span class="k">raise</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+            <span class="s2">"Unexpected error occurred while generating SHAP plots for batch </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">batch_id</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_500_INTERNAL_SERVER_ERROR</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"An unexpected error occurred while generating SHAP plots for batch </span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">!s}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.api.routes.health" class="doc doc-heading">
+            <code>churn_prediction.api.routes.health</code>
+
+
+<a href="#churn_prediction.api.routes.health" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Health Check API Module.</p>
+<p>This module provides a FastAPI router with endpoints to monitor the operational
+status of the API. It verifies the availability of critical application state
+dependencies, specifically the encoder and the machine learning model,
+to ensure the service is ready to handle requests.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="churn_prediction.api.routes.health.HealthResponse" class="doc doc-heading">
+            <code>HealthResponse</code>
+
+
+<a href="#churn_prediction.api.routes.health.HealthResponse" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <p>Response model for the health check endpoint.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.api.routes.health.check_health" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">check_health</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#churn_prediction.api.routes.health.check_health" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Report API and machine-learning dependency health.</p>
+<p>Verifies that the preprocessing encoder and XGBoost model are available
+in application state and reports the current process memory usage and
+health-check timestamp.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>request</code>
+            </td>
+            <td>
+                  <code><span title="fastapi.Request">Request</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Incoming FastAPI request used to inspect application state.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="HealthResponse (churn_prediction.api.routes.health.HealthResponse)" href="#churn_prediction.api.routes.health.HealthResponse">HealthResponse</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Health information containing API status, encoder availability,
+model availability, memory utilization, and timestamp.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/api/routes/health.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@router</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s2">"/health"</span><span class="p">,</span>
+    <span class="n">response_model</span><span class="o">=</span><span class="n">HealthResponse</span><span class="p">,</span>
+    <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span>
+    <span class="n">summary</span><span class="o">=</span><span class="s2">"System Health Check"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">"Performs a diagnostic check of the API's operational state. "</span>
+        <span class="s2">"This endpoint verifies that critical ML dependencies (encoder and booster model) "</span>
+        <span class="s2">"are successfully loaded into memory and reports current system resource utilization. "</span>
+        <span class="s2">"It is primarily used by orchestrators (e.g., Kubernetes) for liveness and readiness probes."</span>
+    <span class="p">),</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Health check completed successfully. Status may be 'HEALTHY' or 'DEGRADED'."</span><span class="p">,</span>
+            <span class="s2">"model"</span><span class="p">:</span> <span class="n">HealthResponse</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_health</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HealthResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Report API and machine-learning dependency health.</span>
+
+<span class="sd">    Verifies that the preprocessing encoder and XGBoost model are available</span>
+<span class="sd">    in application state and reports the current process memory usage and</span>
+<span class="sd">    health-check timestamp.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    request : fastapi.Request</span>
+<span class="sd">        Incoming FastAPI request used to inspect application state.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    HealthResponse</span>
+<span class="sd">        Health information containing API status, encoder availability,</span>
+<span class="sd">        model availability, memory utilization, and timestamp.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Check if the encoder and model are loaded in the application state</span>
+    <span class="n">encoder_loaded</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s2">"encoder"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">model_loaded</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s2">"booster"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">is_healthy</span> <span class="o">=</span> <span class="n">encoder_loaded</span> <span class="ow">and</span> <span class="n">model_loaded</span>
+
+    <span class="k">return</span> <span class="n">HealthResponse</span><span class="p">(</span>
+        <span class="n">status</span><span class="o">=</span><span class="s2">"HEALTHY"</span> <span class="k">if</span> <span class="n">is_healthy</span> <span class="k">else</span> <span class="s2">"DEGRADED"</span><span class="p">,</span>
+        <span class="n">encoder_loaded</span><span class="o">=</span><span class="n">encoder_loaded</span><span class="p">,</span>
+        <span class="n">model_loaded</span><span class="o">=</span><span class="n">model_loaded</span><span class="p">,</span>
+        <span class="n">memory_usage_percent</span><span class="o">=</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">percent</span><span class="p">,</span>
+        <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

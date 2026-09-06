@@ -1,0 +1,1963 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade MLOps pipeline and serving infrastructure for predicting customer churn.">
+      
+      
+      
+      
+        <link rel="prev" href="../model/">
+      
+      
+        <link rel="next" href="../api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Pipelines - Churn Prediction</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pipelines" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Churn Prediction" class="md-header__button md-logo" aria-label="Churn Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Churn Prediction
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pipelines
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/krvipin15/churn-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    krvipin15/churn-prediction
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../deployment/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../config/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Churn Prediction" class="md-nav__button md-logo" aria-label="Churn Prediction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Churn Prediction
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/krvipin15/churn-prediction" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    krvipin15/churn-prediction
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipelines
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        training_pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="training_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_all_stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_all_stages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_ingestion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_ingestion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_preprocessing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_raw_validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_raw_validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_train_validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_train_validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_training
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_val_validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_val_validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.prediction_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prediction_pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="prediction_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.prediction_pipeline.run_prediction_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_prediction_pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        training_pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="training_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_all_stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_all_stages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_ingestion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_ingestion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_preprocessing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_raw_validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_raw_validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_train_validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_train_validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_training
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.training_pipeline.run_val_validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_val_validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.prediction_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prediction_pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="prediction_pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#churn_prediction.pipelines.prediction_pipeline.run_prediction_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_prediction_pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pipelines">Pipelines<a class="headerlink" href="#pipelines" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.pipelines.training_pipeline" class="doc doc-heading">
+            <code>churn_prediction.pipelines.training_pipeline</code>
+
+
+<a href="#churn_prediction.pipelines.training_pipeline" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Training Pipeline for Churn Prediction.</p>
+<p>This module provides a CLI interface to orchestrate the training pipeline,
+including ingestion, schema validation, preprocessing of training and validation
+datasets and training the xgboost model. It is designed to be integrated with DVC
+(Data Version Control) for pipeline reproducibility.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.training_pipeline.run_all_stages" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_all_stages</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.training_pipeline.run_all_stages" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Execute the complete training pipeline.</p>
+<p>Runs ingestion, raw-data validation, preprocessing, processed-data
+validation, and model training sequentially using the supplied
+application settings.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/training_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_all_stages</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Execute the complete training pipeline.</span>
+
+<span class="sd">    Runs ingestion, raw-data validation, preprocessing, processed-data</span>
+<span class="sd">    validation, and model training sequentially using the supplied</span>
+<span class="sd">    application settings.</span>
+<span class="sd">    """</span>
+    <span class="n">run_ingestion</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">run_raw_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">run_preprocessing</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">run_train_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">run_val_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">run_training</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.training_pipeline.run_ingestion" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_ingestion</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.training_pipeline.run_ingestion" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Execute the dataset ingestion stage.</p>
+<p>Downloads or retrieves the configured raw dataset and prepares the
+expected local dataset artifacts.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/training_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_ingestion</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Execute the dataset ingestion stage.</span>
+
+<span class="sd">    Downloads or retrieves the configured raw dataset and prepares the</span>
+<span class="sd">    expected local dataset artifacts.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Resolve Base Directories</span>
+    <span class="n">raw_data_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">RAW_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Execute Ingestion</span>
+    <span class="n">get_dataset</span><span class="p">(</span><span class="n">raw_data_dir</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.training_pipeline.run_preprocessing" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_preprocessing</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.training_pipeline.run_preprocessing" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Execute the training preprocessing stage.</p>
+<p>Transforms the raw dataset into model-ready training and validation
+datasets and persists the fitted preprocessing artifact.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/training_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_preprocessing</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Execute the training preprocessing stage.</span>
+
+<span class="sd">    Transforms the raw dataset into model-ready training and validation</span>
+<span class="sd">    datasets and persists the fitted preprocessing artifact.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Resolve Base Directories</span>
+    <span class="n">raw_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">RAW_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">processed_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROCESSED_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">model_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Derive Specific File Paths</span>
+    <span class="n">raw_file</span> <span class="o">=</span> <span class="n">raw_dir</span> <span class="o">/</span> <span class="s2">"train.parquet"</span>
+    <span class="n">train_file</span> <span class="o">=</span> <span class="n">processed_dir</span> <span class="o">/</span> <span class="s2">"processed_train.parquet"</span>
+    <span class="n">val_file</span> <span class="o">=</span> <span class="n">processed_dir</span> <span class="o">/</span> <span class="s2">"processed_val.parquet"</span>
+    <span class="n">preprocessor_file</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"preprocessor.joblib"</span>
+
+    <span class="c1"># Execute Preprocessing</span>
+    <span class="n">preprocess_train_dataset</span><span class="p">(</span>
+        <span class="n">raw_input_path</span><span class="o">=</span><span class="n">raw_file</span><span class="p">,</span>
+        <span class="n">train_output_path</span><span class="o">=</span><span class="n">train_file</span><span class="p">,</span>
+        <span class="n">val_output_path</span><span class="o">=</span><span class="n">val_file</span><span class="p">,</span>
+        <span class="n">preprocessor_path</span><span class="o">=</span><span class="n">preprocessor_file</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.training_pipeline.run_raw_validation" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_raw_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.training_pipeline.run_raw_validation" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Execute raw dataset validation.</p>
+<p>Validates the ingested raw dataset against <code>RAW_SCHEMA</code> and writes
+validation diagnostics to the configured report location.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/training_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_raw_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Execute raw dataset validation.</span>
+
+<span class="sd">    Validates the ingested raw dataset against ``RAW_SCHEMA`` and writes</span>
+<span class="sd">    validation diagnostics to the configured report location.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Resolve Base Directories</span>
+    <span class="n">raw_data_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">RAW_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">validation_report_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">VALIDATION_REPORT_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Derive Specific File Paths</span>
+    <span class="n">raw_data_file</span> <span class="o">=</span> <span class="n">raw_data_dir</span> <span class="o">/</span> <span class="s2">"train.parquet"</span>
+    <span class="n">raw_validation_report</span> <span class="o">=</span> <span class="n">validation_report_dir</span> <span class="o">/</span> <span class="s2">"raw.json"</span>
+
+    <span class="c1"># Execute Validation</span>
+    <span class="n">validate_dataset</span><span class="p">(</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="n">raw_data_file</span><span class="p">,</span>
+        <span class="n">report_path</span><span class="o">=</span><span class="n">raw_validation_report</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">=</span><span class="n">RAW_SCHEMA</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.training_pipeline.run_train_validation" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_train_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.training_pipeline.run_train_validation" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Validate the processed training dataset.</p>
+<p>Checks the generated training dataset against <code>PROCESSED_SCHEMA</code> and
+records any validation failures in the configured validation report.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/training_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_train_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Validate the processed training dataset.</span>
+
+<span class="sd">    Checks the generated training dataset against ``PROCESSED_SCHEMA`` and</span>
+<span class="sd">    records any validation failures in the configured validation report.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Resolve Base Directories</span>
+    <span class="n">processed_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROCESSED_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">validation_report_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">VALIDATION_REPORT_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Derive Specific File Paths</span>
+    <span class="n">train_file</span> <span class="o">=</span> <span class="n">processed_dir</span> <span class="o">/</span> <span class="s2">"processed_train.parquet"</span>
+    <span class="n">train_validation_report</span> <span class="o">=</span> <span class="n">validation_report_dir</span> <span class="o">/</span> <span class="s2">"train.json"</span>
+
+    <span class="c1"># Execute Validation</span>
+    <span class="n">validate_dataset</span><span class="p">(</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="n">train_file</span><span class="p">,</span>
+        <span class="n">report_path</span><span class="o">=</span><span class="n">train_validation_report</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">=</span><span class="n">PROCESSED_SCHEMA</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.training_pipeline.run_training" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_training</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.training_pipeline.run_training" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Execute the model training stage.</p>
+<p>Trains the configured XGBoost model using the processed training and
+validation datasets and exports the resulting model, model card, and
+training report.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/training_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_training</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Execute the model training stage.</span>
+
+<span class="sd">    Trains the configured XGBoost model using the processed training and</span>
+<span class="sd">    validation datasets and exports the resulting model, model card, and</span>
+<span class="sd">    training report.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Resolve Base Directories</span>
+    <span class="n">processed_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROCESSED_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">model_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">report_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TRAINING_REPORT_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Derive Specific File Paths</span>
+    <span class="n">train_file</span> <span class="o">=</span> <span class="n">processed_dir</span> <span class="o">/</span> <span class="s2">"processed_train.parquet"</span>
+    <span class="n">val_file</span> <span class="o">=</span> <span class="n">processed_dir</span> <span class="o">/</span> <span class="s2">"processed_val.parquet"</span>
+    <span class="n">model_file</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"model.ubj"</span>
+    <span class="n">model_card_file</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"card.json"</span>
+    <span class="n">report_file</span> <span class="o">=</span> <span class="n">report_dir</span> <span class="o">/</span> <span class="s2">"training.json"</span>
+
+    <span class="c1"># Execute Training</span>
+    <span class="n">train_xgb_model</span><span class="p">(</span>
+        <span class="n">train_data_path</span><span class="o">=</span><span class="n">train_file</span><span class="p">,</span>
+        <span class="n">val_data_path</span><span class="o">=</span><span class="n">val_file</span><span class="p">,</span>
+        <span class="n">model_filepath</span><span class="o">=</span><span class="n">model_file</span><span class="p">,</span>
+        <span class="n">model_card_path</span><span class="o">=</span><span class="n">model_card_file</span><span class="p">,</span>
+        <span class="n">report_path</span><span class="o">=</span><span class="n">report_file</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.training_pipeline.run_val_validation" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_val_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.training_pipeline.run_val_validation" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Validate the processed validation dataset.</p>
+<p>Checks the generated validation dataset against <code>PROCESSED_SCHEMA</code>
+and records any validation failures in the configured validation report.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/training_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_val_validation</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Validate the processed validation dataset.</span>
+
+<span class="sd">    Checks the generated validation dataset against ``PROCESSED_SCHEMA``</span>
+<span class="sd">    and records any validation failures in the configured validation report.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Resolve Base Directories</span>
+    <span class="n">processed_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROCESSED_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">validation_report_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">VALIDATION_REPORT_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Derive Specific File Paths</span>
+    <span class="n">val_file</span> <span class="o">=</span> <span class="n">processed_dir</span> <span class="o">/</span> <span class="s2">"processed_val.parquet"</span>
+    <span class="n">val_validation_report</span> <span class="o">=</span> <span class="n">validation_report_dir</span> <span class="o">/</span> <span class="s2">"val.json"</span>
+
+    <span class="c1"># Execute Validation</span>
+    <span class="n">validate_dataset</span><span class="p">(</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="n">val_file</span><span class="p">,</span>
+        <span class="n">report_path</span><span class="o">=</span><span class="n">val_validation_report</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">=</span><span class="n">PROCESSED_SCHEMA</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="churn_prediction.pipelines.prediction_pipeline" class="doc doc-heading">
+            <code>churn_prediction.pipelines.prediction_pipeline</code>
+
+
+<a href="#churn_prediction.pipelines.prediction_pipeline" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Prediction Pipeline for Churn Prediction.</p>
+<p>This module defines the end-to-end workflow for
+generating predictions on new data, integrating
+dataset validation, feature preprocessing, and
+model inference.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="churn_prediction.pipelines.prediction_pipeline.run_prediction_pipeline" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run_prediction_pipeline</span><span class="p">(</span><span class="n">batch_id</span><span class="p">,</span> <span class="n">raw_file_path</span><span class="p">,</span> <span class="n">loaded_encoder</span><span class="p">,</span> <span class="n">loaded_booster</span><span class="p">)</span></code>
+
+<a href="#churn_prediction.pipelines.prediction_pipeline.run_prediction_pipeline" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Execute the complete batch prediction workflow.</p>
+<p>The pipeline validates the raw input dataset, transforms it using the
+pre-fitted encoder, validates the resulting model-ready dataset, and
+generates predictions using the trained XGBoost booster.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>batch_id</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Unique identifier for the current prediction batch.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>raw_file_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the raw customer dataset to be scored.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>loaded_encoder</code>
+            </td>
+            <td>
+                  <code><span title="sklearn.preprocessing.OrdinalEncoder">OrdinalEncoder</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pre-fitted encoder used to transform categorical features.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>loaded_booster</code>
+            </td>
+            <td>
+                  <code><span title="xgboost.Booster">Booster</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trained XGBoost model used to generate churn predictions.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the input dataset or required output directories are unavailable.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If raw or processed data fails validation or preprocessing fails.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="RuntimeError">RuntimeError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If model inference or artifact persistence fails.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/churn_prediction/pipelines/prediction_pipeline.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_prediction_pipeline</span><span class="p">(</span>
+    <span class="n">batch_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">raw_file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">loaded_encoder</span><span class="p">:</span> <span class="n">OrdinalEncoder</span><span class="p">,</span>
+    <span class="n">loaded_booster</span><span class="p">:</span> <span class="n">Booster</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Execute the complete batch prediction workflow.</span>
+
+<span class="sd">    The pipeline validates the raw input dataset, transforms it using the</span>
+<span class="sd">    pre-fitted encoder, validates the resulting model-ready dataset, and</span>
+<span class="sd">    generates predictions using the trained XGBoost booster.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    batch_id : str</span>
+<span class="sd">        Unique identifier for the current prediction batch.</span>
+<span class="sd">    raw_file_path : str or pathlib.Path</span>
+<span class="sd">        Path to the raw customer dataset to be scored.</span>
+<span class="sd">    loaded_encoder : sklearn.preprocessing.OrdinalEncoder</span>
+<span class="sd">        Pre-fitted encoder used to transform categorical features.</span>
+<span class="sd">    loaded_booster : xgboost.Booster</span>
+<span class="sd">        Trained XGBoost model used to generate churn predictions.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the input dataset or required output directories are unavailable.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If raw or processed data fails validation or preprocessing fails.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If model inference or artifact persistence fails.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Initialize settings</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
+    <span class="n">batch_id</span> <span class="o">=</span> <span class="n">batch_id</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="c1"># Resolve base directories</span>
+    <span class="n">processed_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROCESSED_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">prediction_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PREDICTION_DATA_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">model_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">validation_report_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">VALIDATION_REPORT_DIR</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Derive specific file paths</span>
+    <span class="n">raw_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">raw_file_path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">processed_file_path</span> <span class="o">=</span> <span class="n">processed_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"processed_</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">.parquet"</span>
+    <span class="n">prediction_file_path</span> <span class="o">=</span> <span class="n">prediction_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"prediction_</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">.csv"</span>
+    <span class="n">model_card_path</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"card.json"</span>
+    <span class="n">raw_report_path</span> <span class="o">=</span> <span class="n">validation_report_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"raw_</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">.json"</span>
+    <span class="n">processed_report_path</span> <span class="o">=</span> <span class="n">validation_report_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"processed_</span><span class="si">{</span><span class="n">batch_id</span><span class="si">}</span><span class="s2">.json"</span>
+
+    <span class="c1"># 1. Validate the raw dataset</span>
+    <span class="n">validate_dataset</span><span class="p">(</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="n">raw_file_path</span><span class="p">,</span>
+        <span class="n">report_path</span><span class="o">=</span><span class="n">raw_report_path</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">=</span><span class="n">RAW_BASE_SCHEMA</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 2. Preprocess the raw dataset for inference</span>
+    <span class="n">preprocess_inference_dataset</span><span class="p">(</span>
+        <span class="n">raw_input_path</span><span class="o">=</span><span class="n">raw_file_path</span><span class="p">,</span>
+        <span class="n">processed_output_path</span><span class="o">=</span><span class="n">processed_file_path</span><span class="p">,</span>
+        <span class="n">fitted_encoder</span><span class="o">=</span><span class="n">loaded_encoder</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 3. Validate the processed dataset</span>
+    <span class="n">validate_dataset</span><span class="p">(</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="n">processed_file_path</span><span class="p">,</span>
+        <span class="n">report_path</span><span class="o">=</span><span class="n">processed_report_path</span><span class="p">,</span>
+        <span class="n">schema</span><span class="o">=</span><span class="n">PROCESSED_BASE_SCHEMA</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 4. Run inference on the processed dataset</span>
+    <span class="n">run_inference</span><span class="p">(</span>
+        <span class="n">booster</span><span class="o">=</span><span class="n">loaded_booster</span><span class="p">,</span>
+        <span class="n">raw_filepath</span><span class="o">=</span><span class="n">raw_file_path</span><span class="p">,</span>
+        <span class="n">input_filepath</span><span class="o">=</span><span class="n">processed_file_path</span><span class="p">,</span>
+        <span class="n">output_filepath</span><span class="o">=</span><span class="n">prediction_file_path</span><span class="p">,</span>
+        <span class="n">model_card_path</span><span class="o">=</span><span class="n">model_card_path</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
