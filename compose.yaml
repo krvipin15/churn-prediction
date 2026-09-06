@@ -1,0 +1,56 @@
+services:
+  # BACKEND API: Handles ML model inference and data processing
+  api:
+    build:
+      context: .
+      dockerfile: Containerfile.api
+    image: churn-prediction-api:local
+    container_name: churn-api
+    restart: unless-stopped
+    userns_mode: "keep-id"
+    env_file: .env
+    environment:
+      FASTAPI_HOST: 0.0.0.0
+      FASTAPI_PORT: 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:z
+      - ./models:/app/models:ro,z
+      - ./reports:/app/reports:z
+      - ./logs:/app/logs:z
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # DASHBOARD: User interface for visualizing churn predictions
+  dashboard:
+    build:
+      context: .
+      dockerfile: Containerfile.dashboard
+    image: churn-prediction-dashboard:local
+    container_name: churn-dashboard
+    restart: unless-stopped
+    userns_mode: "keep-id"
+    env_file: .env
+    environment:
+      FASTAPI_HOST: api
+      FASTAPI_PORT: 8000
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data:ro,z
+      - ./models:/app/models:ro,z
+      - ./reports:/app/reports:ro,z
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
