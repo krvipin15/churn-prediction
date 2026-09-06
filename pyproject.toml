@@ -18,7 +18,22 @@ classifiers = [
     "Framework :: Pytest",
     "Typing :: Typed",
 ]
-dependencies = []
+dependencies = [
+    "dvc-s3>=3.3.0",
+    "fastapi>=0.141.1",
+    "kagglehub>=1.0.2",
+    "pandera[pandas]>=0.33.1",
+    "plotly>=7.0.0",
+    "pyarrow>=25.0.1",
+    "pydantic-settings>=2.15.0",
+    "python-multipart>=0.0.32",
+    "sentry-sdk>=2.68.1",
+    "shap>=0.52.0",
+    "streamlit>=1.63.0",
+    "structlog>=26.1.0",
+    "uvicorn>=0.52.4",
+    "xgboost>=3.4.1",
+]
 
 [dependency-groups]
 dev = ["pre-commit>=4.6.2", "ruff>=0.16.6", "ty>=0.0.78"]
