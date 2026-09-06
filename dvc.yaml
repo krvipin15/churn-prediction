@@ -1,0 +1,74 @@
+stages:
+  ingest_raw:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline ingest-data
+    deps:
+      - src/churn_prediction/pipelines/training_pipeline.py
+      - src/churn_prediction/data/ingestion.py
+      - src/churn_prediction/config/settings.py
+      - src/churn_prediction/config/logger.py
+    outs:
+      - data/raw/train.parquet
+      - data/raw/test.csv
+
+  validate_raw:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline validate-raw
+    deps:
+      - data/raw/train.parquet
+      - src/churn_prediction/pipelines/training_pipeline.py
+      - src/churn_prediction/data/schemas.py
+      - src/churn_prediction/data/validation.py
+      - src/churn_prediction/config/settings.py
+      - src/churn_prediction/config/logger.py
+
+  preprocess_raw:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline preprocess-raw
+    deps:
+      - data/raw/train.parquet
+      - src/churn_prediction/pipelines/training_pipeline.py
+      - src/churn_prediction/features/train_preprocessing.py
+      - src/churn_prediction/config/settings.py
+      - src/churn_prediction/config/logger.py
+    params:
+      - schema
+      - preprocessing
+    outs:
+      - data/processed/processed_train.parquet
+      - data/processed/processed_val.parquet
+      - models/preprocessor.joblib
+
+  validate_train:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline validate-train
+    deps:
+      - data/processed/processed_train.parquet
+      - src/churn_prediction/pipelines/training_pipeline.py
+      - src/churn_prediction/data/schemas.py
+      - src/churn_prediction/data/validation.py
+      - src/churn_prediction/config/settings.py
+      - src/churn_prediction/config/logger.py
+
+  validate_val:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline validate-val
+    deps:
+      - data/processed/processed_val.parquet
+      - src/churn_prediction/pipelines/training_pipeline.py
+      - src/churn_prediction/data/schemas.py
+      - src/churn_prediction/data/validation.py
+      - src/churn_prediction/config/settings.py
+      - src/churn_prediction/config/logger.py
+
+  train_model:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline train-model
+    deps:
+      - data/processed/processed_train.parquet
+      - data/processed/processed_val.parquet
+      - src/churn_prediction/pipelines/training_pipeline.py
+      - src/churn_prediction/model/training.py
+      - src/churn_prediction/config/settings.py
+      - src/churn_prediction/config/logger.py
+    params:
+      - train
+      - evaluate
+      - metadata
+    outs:
+      - models/model.ubj
+      - models/card.json

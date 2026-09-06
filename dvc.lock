@@ -1,0 +1,254 @@
+schema: '2.0'
+stages:
+  ingest_raw:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline ingest-data
+    deps:
+    - path: src/churn_prediction/config/logger.py
+      hash: md5
+      md5: 59197bbbd74bb211d3dd2833be640bdb
+      size: 9856
+    - path: src/churn_prediction/config/settings.py
+      hash: md5
+      md5: 996eb7f380a9acf22f5d93b643d03cc0
+      size: 14277
+    - path: src/churn_prediction/data/ingestion.py
+      hash: md5
+      md5: 98234f9f573a9a4c8df70606dd3acb4b
+      size: 12734
+    - path: src/churn_prediction/pipelines/training_pipeline.py
+      hash: md5
+      md5: 5a45b60c0a197e75b2e7d80cabffd578
+      size: 7200
+    outs:
+    - path: data/raw/test.csv
+      hash: md5
+      md5: b55d1031b6cb40cb539fb5677331cd51
+      size: 33762450
+    - path: data/raw/train.parquet
+      hash: md5
+      md5: 6132c3290ffcfb788761d42d94a06114
+      size: 4702042
+  validate_raw:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline validate-raw
+    deps:
+    - path: data/raw/train.parquet
+      hash: md5
+      md5: 6132c3290ffcfb788761d42d94a06114
+      size: 4702042
+    - path: src/churn_prediction/config/logger.py
+      hash: md5
+      md5: 59197bbbd74bb211d3dd2833be640bdb
+      size: 9856
+    - path: src/churn_prediction/config/settings.py
+      hash: md5
+      md5: 996eb7f380a9acf22f5d93b643d03cc0
+      size: 14277
+    - path: src/churn_prediction/data/schemas.py
+      hash: md5
+      md5: 612cf1bb0fb71baf01eacabf7b2305e1
+      size: 6761
+    - path: src/churn_prediction/data/validation.py
+      hash: md5
+      md5: b313f807c031c70347934d0c73f44958
+      size: 8414
+    - path: src/churn_prediction/pipelines/training_pipeline.py
+      hash: md5
+      md5: 5a45b60c0a197e75b2e7d80cabffd578
+      size: 7200
+  preprocess_raw:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline preprocess-raw
+    deps:
+    - path: data/raw/train.parquet
+      hash: md5
+      md5: 6132c3290ffcfb788761d42d94a06114
+      size: 4702042
+    - path: src/churn_prediction/config/logger.py
+      hash: md5
+      md5: 59197bbbd74bb211d3dd2833be640bdb
+      size: 9856
+    - path: src/churn_prediction/config/settings.py
+      hash: md5
+      md5: 996eb7f380a9acf22f5d93b643d03cc0
+      size: 14277
+    - path: src/churn_prediction/features/train_preprocessing.py
+      hash: md5
+      md5: bcff1a707a9f99789479917df011ed2f
+      size: 7248
+    - path: src/churn_prediction/pipelines/training_pipeline.py
+      hash: md5
+      md5: 5a45b60c0a197e75b2e7d80cabffd578
+      size: 7200
+    params:
+      params.yaml:
+        preprocessing:
+          test_size: 0.2
+          random_state: 42
+        schema:
+          target_column: Churn
+          binary_columns:
+          - gender
+          - SeniorCitizen
+          - Partner
+          - Dependents
+          - PhoneService
+          - PaperlessBilling
+          ordinal_columns:
+          - MultipleLines
+          - InternetService
+          - OnlineSecurity
+          - OnlineBackup
+          - DeviceProtection
+          - TechSupport
+          - StreamingTV
+          - StreamingMovies
+          - Contract
+          - PaymentMethod
+          feature_columns:
+          - gender
+          - SeniorCitizen
+          - Partner
+          - Dependents
+          - PhoneService
+          - PaperlessBilling
+          - tenure
+          - MultipleLines
+          - InternetService
+          - OnlineSecurity
+          - OnlineBackup
+          - DeviceProtection
+          - TechSupport
+          - StreamingTV
+          - StreamingMovies
+          - Contract
+          - PaymentMethod
+          - MonthlyCharges
+          - TotalCharges
+    outs:
+    - path: data/processed/processed_train.parquet
+      hash: md5
+      md5: 8f852f421b600abd194933af2bcf9414
+      size: 3757208
+    - path: data/processed/processed_val.parquet
+      hash: md5
+      md5: 5c25203a1678a01dce21e4880de6bbae
+      size: 991005
+    - path: models/preprocessor.joblib
+      hash: md5
+      md5: 7011eab0698b200bd29358820d39d633
+      size: 3198
+  validate_train:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline validate-train
+    deps:
+    - path: data/processed/processed_train.parquet
+      hash: md5
+      md5: 8f852f421b600abd194933af2bcf9414
+      size: 3757208
+    - path: src/churn_prediction/config/logger.py
+      hash: md5
+      md5: 59197bbbd74bb211d3dd2833be640bdb
+      size: 9856
+    - path: src/churn_prediction/config/settings.py
+      hash: md5
+      md5: 996eb7f380a9acf22f5d93b643d03cc0
+      size: 14277
+    - path: src/churn_prediction/data/schemas.py
+      hash: md5
+      md5: 612cf1bb0fb71baf01eacabf7b2305e1
+      size: 6761
+    - path: src/churn_prediction/data/validation.py
+      hash: md5
+      md5: b313f807c031c70347934d0c73f44958
+      size: 8414
+    - path: src/churn_prediction/pipelines/training_pipeline.py
+      hash: md5
+      md5: 5a45b60c0a197e75b2e7d80cabffd578
+      size: 7200
+  validate_val:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline validate-val
+    deps:
+    - path: data/processed/processed_val.parquet
+      hash: md5
+      md5: 5c25203a1678a01dce21e4880de6bbae
+      size: 991005
+    - path: src/churn_prediction/config/logger.py
+      hash: md5
+      md5: 59197bbbd74bb211d3dd2833be640bdb
+      size: 9856
+    - path: src/churn_prediction/config/settings.py
+      hash: md5
+      md5: 996eb7f380a9acf22f5d93b643d03cc0
+      size: 14277
+    - path: src/churn_prediction/data/schemas.py
+      hash: md5
+      md5: 612cf1bb0fb71baf01eacabf7b2305e1
+      size: 6761
+    - path: src/churn_prediction/data/validation.py
+      hash: md5
+      md5: b313f807c031c70347934d0c73f44958
+      size: 8414
+    - path: src/churn_prediction/pipelines/training_pipeline.py
+      hash: md5
+      md5: 5a45b60c0a197e75b2e7d80cabffd578
+      size: 7200
+  train_model:
+    cmd: python3 -m churn_prediction.pipelines.training_pipeline train-model
+    deps:
+    - path: data/processed/processed_train.parquet
+      hash: md5
+      md5: 8f852f421b600abd194933af2bcf9414
+      size: 3757208
+    - path: data/processed/processed_val.parquet
+      hash: md5
+      md5: 5c25203a1678a01dce21e4880de6bbae
+      size: 991005
+    - path: src/churn_prediction/config/logger.py
+      hash: md5
+      md5: 59197bbbd74bb211d3dd2833be640bdb
+      size: 9856
+    - path: src/churn_prediction/config/settings.py
+      hash: md5
+      md5: 996eb7f380a9acf22f5d93b643d03cc0
+      size: 14277
+    - path: src/churn_prediction/model/training.py
+      hash: md5
+      md5: f1c79dcafa8955604f45b93047dfae4c
+      size: 29537
+    - path: src/churn_prediction/pipelines/training_pipeline.py
+      hash: md5
+      md5: 5a45b60c0a197e75b2e7d80cabffd578
+      size: 7200
+    params:
+      params.yaml:
+        evaluate:
+          classification_threshold: 0.5
+        metadata:
+          registered_model_name: churn_model
+          model_type: XGBoost Classifier
+          developer: ML Engineering Team
+        train:
+          num_boost_round: 3000
+          early_stopping_rounds: 100
+          verbose_eval: 100
+          xgb_params:
+            objective: binary:logistic
+            learning_rate: 0.03
+            max_depth: 6
+            subsample: 0.8
+            colsample_bytree: 0.8
+            min_child_weight: 3
+            tree_method: hist
+            random_state: 42
+            nthread: -1
+            eval_metric:
+            - logloss
+            - auc
+            - aucpr
+    outs:
+    - path: models/card.json
+      hash: md5
+      md5: f445016da5c193495fd488ad2c252be1
+      size: 5805
+    - path: models/model.ubj
+      hash: md5
+      md5: 9d8b3259aab887e9421f53cacd918085
+      size: 6634156

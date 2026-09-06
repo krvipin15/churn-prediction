@@ -1,0 +1,55 @@
+# Add patterns of files dvc should ignore, which could improve
+# the performance. Learn more at
+# https://dvc.org/doc/user-guide/dvcignore
+
+# OS & System Artifacts
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+*~
+*.swp
+*.swo
+
+# Git & Repository Metadata
+.git
+.gitignore
+.gitattributes
+.gitkeep
+
+# Python & Notebook Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# Environment & Security Safeguards
+.env
+.env.*
+*.pem
+*.key
+
+# Temporary Logs & Processing Files
+*.log
+*.tmp
+*.temp
+*.bak
+
+# Database Lock & WAL Files
+*.db-journal
+*.db-wal
+*.db-shm
+
+# IDE & Editor Metadata
+.idea/
+.vscode/
+
+# Tool Caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.evidently/
