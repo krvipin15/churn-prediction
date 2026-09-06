@@ -1,0 +1,169 @@
+# Python runtime
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# Environment managers
+.venv/
+venv/
+env/
+ENV/
+.uv/
+env.bak/
+venv.bak/
+
+# Build and packaging output
+build/
+dist/
+sdist/
+wheels/
+*.egg-info/
+*.egg
+*.whl
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test, coverage, lint, and type-checker caches
+.pytest_cache/
+.cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+.pyright_cache/
+.pyre/
+.pytype/
+.tox/
+.nox/
+.pre-commit-cache/
+*.prof
+*.lprof
+*.cprof
+
+# Environment variables, credentials, and private keys
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+service-account*.json
+credentials*.json
+.vault-token
+secrets.yaml
+secrets.yml
+secrets.json
+.streamlit/secrets.toml
+!.streamlit/config.toml
+
+# Ignore local raw/processed data files
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/predictions/*
+!data/predictions/.gitkeep
+
+# DVC local cache and state
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local
+
+# Local model registries & experiment logs
+models/*
+!models/.gitkeep
+mlruns/
+mlartifacts/
+wandb/
+runs/
+lightning_logs/
+ray_results/
+catboost_info/
+.ipynb_checkpoints/
+
+# Serialized models and local datasets
+*.skops
+*.pkl
+*.joblib
+*.onnx
+*.pt
+*.pth
+*.h5
+*.pb
+*.mar
+*.safetensors
+*.csv
+*.parquet
+*.feather
+*.avro
+*.orc
+*.duckdb
+*.db
+*.sqlite
+*.sqlite3
+
+# Hyperparameter Tuning
+optuna.db
+*.db-journal
+
+# Data Drift & Monitoring
+.evidently/
+evidently_workspace/
+reports/validation/*
+!reports/validation/.gitkeep
+reports/preprocessing/*
+!reports/preprocessing/.gitkeep
+reports/drift/*
+!reports/drift/.gitkeep
+reports/explainability/*
+!reports/explainability/.gitkeep
+reports/training/*
+!reports/training/.gitkeep
+reports/shap/*
+!reports/shap/.gitkeep
+
+# Local Postgres container data mounts & database dumps
+postgres_data/
+*.sql
+*.dump
+
+# Podman & Compose local overrides
+podman-compose.override.yml
+docker-compose.override.yml
+.podman/
+
+# Deployment Platform (Render local dev artifacts)
+.render/
+
+# Static site generator build output
+site/
+
+# Logs and local application state
+*.log
+logs/*
+!logs/.gitkeep
+
+# Archives created during data export or packaging
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.7z
+
+# IDEs, OS, and editor swap files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*~
+*.swp
+*.swo
