@@ -140,6 +140,8 @@ jobs:
       # 5. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           uv run mkdocs gh-deploy \
             --strict \
             --force \
