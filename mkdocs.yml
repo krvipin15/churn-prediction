@@ -1,0 +1,66 @@
+# Documentation site configuration for the Churn Prediction project
+
+site_name: Churn Prediction
+site_description: Production-grade MLOps pipeline and serving infrastructure for predicting customer churn.
+repo_url: https://github.com/krvipin15/churn-prediction
+repo_name: krvipin15/churn-prediction
+
+theme:
+  name: material
+  palette:
+    # Light mode configuration
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode configuration
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs # Organizes top-level nav into a horizontal tab bar
+    - navigation.sections # Groups navigation links into logical sections
+    - navigation.top # Adds a "Back to top" button for long pages
+    - content.code.copy # Adds a copy button to all code blocks
+    - search.suggest # Provides autocomplete suggestions during search
+
+plugins:
+  - search # Enables built-in client-side search functionality
+  - mkdocstrings: # Automatically generates documentation from Python docstrings
+      handlers:
+        python:
+          paths: [src] # Look for source code in the /src directory
+          options:
+            docstring_style: numpy # Use NumPy style docstrings for consistent formatting
+            show_source: true # Include a link to the original source code
+            show_root_heading: true # Display the heading for the main module/class
+            merge_init_into_class: true # Consolidate __init__ docs into the main class description
+            group_by_category: true # Organize methods/attributes by type (e.g., Properties, Methods)
+
+markdown_extensions:
+  - admonition # Allows for info, warning, and danger callout boxes
+  - pymdownx.highlight # Enables syntax highlighting for code blocks
+  - pymdownx.superfences # Allows nested code blocks and better fence handling
+  - pymdownx.inlinehilite # Enables syntax highlighting for inline code snippets
+  - toc:
+      permalink: true # Adds clickable anchor links to headings for direct sharing
+
+# The structure of the documentation website
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Usage: usage.md
+  - Deployment: deployment.md
+  - API Reference:
+      - Config: reference/config.md
+      - Data: reference/data.md
+      - Features: reference/features.md
+      - Model: reference/model.md
+      - Pipelines: reference/pipelines.md
+      - API: reference/api.md
+      - Client: reference/client.md

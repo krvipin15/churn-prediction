@@ -50,7 +50,6 @@ test:
 docs-serve:
     uv run mkdocs serve -a 127.0.0.1:{{MKDOCS_PORT}} --strict
 
-
 # Publish the documentation to GitHub Pages
 docs-deploy:
     uv run mkdocs gh-deploy -csm "Deploy the latest documentation" -b gh-pages --shell --force
