@@ -8,6 +8,8 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
+<img width="1920" height="1047" alt="image" src="https://github.com/user-attachments/assets/657959bb-76ea-4fdb-ae3f-55bc58f85d79" />
+
 Production-grade MLOps pipeline, serving infrastructure, and containerized deployment for predicting customer churn. The project covers the full end-to-end lifecycle — automated data ingestion, Pandera schema validation, feature engineering, XGBoost model training, SHAP explainability, FastAPI serving, interactive Streamlit UI, and multi-container orchestration with Podman.
 
 **Full documentation:** [krvipin15.github.io/churn-prediction](https://krvipin15.github.io/churn-prediction/)
