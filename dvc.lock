@@ -9,8 +9,8 @@ stages:
       size: 9856
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 996eb7f380a9acf22f5d93b643d03cc0
-      size: 14277
+      md5: 13907dc5b5ab7df1a458bc2798b89b4d
+      size: 14982
     - path: src/churn_prediction/data/ingestion.py
       hash: md5
       md5: 98234f9f573a9a4c8df70606dd3acb4b
@@ -41,8 +41,8 @@ stages:
       size: 9856
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 996eb7f380a9acf22f5d93b643d03cc0
-      size: 14277
+      md5: 13907dc5b5ab7df1a458bc2798b89b4d
+      size: 14982
     - path: src/churn_prediction/data/schemas.py
       hash: md5
       md5: 612cf1bb0fb71baf01eacabf7b2305e1
@@ -68,8 +68,8 @@ stages:
       size: 9856
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 996eb7f380a9acf22f5d93b643d03cc0
-      size: 14277
+      md5: 13907dc5b5ab7df1a458bc2798b89b4d
+      size: 14982
     - path: src/churn_prediction/features/train_preprocessing.py
       hash: md5
       md5: bcff1a707a9f99789479917df011ed2f
@@ -149,8 +149,8 @@ stages:
       size: 9856
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 996eb7f380a9acf22f5d93b643d03cc0
-      size: 14277
+      md5: 13907dc5b5ab7df1a458bc2798b89b4d
+      size: 14982
     - path: src/churn_prediction/data/schemas.py
       hash: md5
       md5: 612cf1bb0fb71baf01eacabf7b2305e1
@@ -176,8 +176,8 @@ stages:
       size: 9856
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 996eb7f380a9acf22f5d93b643d03cc0
-      size: 14277
+      md5: 13907dc5b5ab7df1a458bc2798b89b4d
+      size: 14982
     - path: src/churn_prediction/data/schemas.py
       hash: md5
       md5: 612cf1bb0fb71baf01eacabf7b2305e1
@@ -207,8 +207,8 @@ stages:
       size: 9856
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 996eb7f380a9acf22f5d93b643d03cc0
-      size: 14277
+      md5: 13907dc5b5ab7df1a458bc2798b89b4d
+      size: 14982
     - path: src/churn_prediction/model/training.py
       hash: md5
       md5: f1c79dcafa8955604f45b93047dfae4c
@@ -246,7 +246,7 @@ stages:
     outs:
     - path: models/card.json
       hash: md5
-      md5: 0a4da3498b3e8da72cebe4e483ba4619
+      md5: 160de57a24f4a3bb9cad654af23cb5cd
       size: 5805
     - path: models/model.ubj
       hash: md5

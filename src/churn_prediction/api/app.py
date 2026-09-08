@@ -6,8 +6,6 @@ and manages the application lifecycle—specifically the loading and unloading
 of ML artifacts (OrdinalEncoder and XGBoost Booster) into the application state.
 """
 
-import shutil
-import subprocess
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from importlib import metadata
@@ -21,47 +19,6 @@ from sklearn.preprocessing import OrdinalEncoder
 from churn_prediction.api.routes import explain, health, predict
 from churn_prediction.config.logger import get_logger
 from churn_prediction.config.settings import get_settings
-
-
-def _pull_artifacts(artifacts: list[str]) -> None:
-    """Pull required artifacts from DagsHub using DVC.
-
-    Parameters
-    ----------
-    artifacts : list[str]
-        List of artifact paths to pull from DagsHub.
-
-    Raises
-    ------
-    RuntimeError
-        If the 'uv' or 'dvc' executables are not found in the system path.
-    """
-    logger = get_logger()
-
-    # Check if 'uv' is available in the system path
-    uv_path = shutil.which("uv")
-    if uv_path is None:
-        logger.critical("The 'uv' executable was not found in the system path.")
-        raise RuntimeError("uv is not installed or not in PATH")
-
-    try:
-        result = subprocess.run(  # noqa: S603
-            [uv_path, "run", "dvc", "pull", *artifacts],
-            capture_output=True,
-            text=True,
-            check=True,
-            shell=False,
-        )
-        logger.info("DVC pull successful: %s", result.stdout)
-    except subprocess.CalledProcessError as e:
-        logger.critical("Failed to pull artifacts from DagsHub. Error: %s", e.stderr)
-        raise RuntimeError(
-            "Required artifacts are missing and 'dvc pull' failed. "
-            "Ensure you have the correct DAGSHUB_ACCESS_ID configured."
-        ) from e
-    except FileNotFoundError as err:
-        logger.critical("The 'uv' or 'dvc' executable was not found in the system path.")
-        raise RuntimeError("DVC environment not set up correctly. Cannot pull artifacts.") from err
 
 
 @asynccontextmanager
@@ -97,26 +54,24 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger = get_logger()
     settings = get_settings()
 
-    # Resolve paths to required artifacts
-    demo_dir = settings.RAW_DATA_DIR.expanduser().resolve()
-    model_dir = settings.MODEL_DIR.expanduser().resolve()
+    # Resolve base directory
     required_artifacts = [
-        demo_dir / "test.csv",
-        model_dir / "preprocessor.joblib",
-        model_dir / "model.ubj",
-        model_dir / "card.json",
+        settings.RAW_DATA_DIR / "test.csv",
+        settings.MODEL_DIR / "preprocessor.joblib",
+        settings.MODEL_DIR / "model.ubj",
+        settings.MODEL_DIR / "card.json",
     ]
-    logger.debug("Resolved required artifact paths: %s", required_artifacts)
 
-    # Check for the existence of required artifacts; if missing, attempt to pull from DagsHub via DVC
-    if not all(path.exists() for path in required_artifacts):
-        logger.warning("One or more artifacts missing. Attempting to pull from DagsHub via DVC...")
-        _pull_artifacts([str(path) for path in required_artifacts])
-
-    # After attempting to pull, verify that all required artifacts are now present
-    if not all(path.exists() for path in required_artifacts):
-        logger.critical("Artifacts still missing after dvc pull attempt.")
-        raise FileNotFoundError("Required ML artifacts could not be retrieved from remote.")
+    # Check for the existence of the required artifacts
+    if not all(artifact.exists() for artifact in required_artifacts):
+        logger.critical(
+            "No artifacts found. Clone the repository `krvipin15/churn-prediction` \
+            and run `dvc repro` first to generate the required files."
+        )
+        raise FileNotFoundError(
+            "Required artifacts doesn't exists; Clone the repository `krvipin15/churn-prediction` \
+            and run `dvc repro` first to generate the required files."
+        )
 
     # Load the pre-fitted encoder and XGBoost model
     try:

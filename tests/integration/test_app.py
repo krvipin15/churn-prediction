@@ -59,7 +59,7 @@ def test_create_app_metadata_and_routes():
                 if isinstance(sub_path, str):
                     registered_paths.add(sub_path)
 
-    # Verify at minimum that /health is registered
+    # Assert that expected operational routes are registered
     assert "/health" in registered_paths
     assert "/predict" in registered_paths or any("predict" in p for p in registered_paths)
     assert "/explain" in registered_paths or any("explain" in p for p in registered_paths)
@@ -79,7 +79,6 @@ def test_cors_middleware_config():
     assert cors_kwargs.get("allow_origins") == ["*"]
     assert cors_kwargs.get("allow_methods") == ["*"]
     assert cors_kwargs.get("allow_headers") == ["*"]
-    assert cors_kwargs.get("allow_credentials") is False
 
 
 @pytest.mark.asyncio
@@ -120,13 +119,9 @@ async def test_lifespan_missing_artifacts(
     monkeypatch.setattr(f"{APP_MODULE_PATH}.get_settings", lambda: mock_settings)
 
     app = FastAPI()
-    with patch(f"{APP_MODULE_PATH}._pull_artifacts") as mock_pull:
-        with pytest.raises(
-            FileNotFoundError, match="Required ML artifacts could not be retrieved from remote"
-        ):
-            async with lifespan(app):
-                pass
-        mock_pull.assert_called_once()
+    with pytest.raises(FileNotFoundError, match="Required artifacts doesn't exists"):
+        async with lifespan(app):
+            pass
 
 
 @pytest.mark.asyncio

@@ -22,6 +22,12 @@ COPY params.yaml README.md LICENSE ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-group docs
 
+# Create the required directories and copy the necessary
+RUN mkdir -p models
+COPY models/preprocessor.joblib ./models/preprocessor.joblib
+COPY models/model.ubj ./models/model.ubj
+COPY models/card.json ./models/card.json
+
 # Stage 2: Runtime
 FROM docker.io/library/python:3.12-slim AS runtime
 
@@ -47,5 +53,4 @@ USER 1000
 EXPOSE 8000
 
 # Run the application using uvicorn
-ENTRYPOINT ["uvicorn", "churn_prediction.api.app:app"]
-CMD ["--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "exec uvicorn churn_prediction.api.app:app --host 0.0.0.0 --port ${PORT:-8000}"]

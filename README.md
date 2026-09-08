@@ -16,7 +16,7 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
 
 ## Features
 
-- **Reproducible Pipeline**: DVC-orchestrated stages (ingest → validate → preprocess → validate → train).
+- **Reproducible Pipeline**: DVC-orchestrated stages (ingest → validate → preprocess → validate → train), generated artifacts are pushed to DagsHub.
 - **Schema-Validated Data**: Pandera schemas enforce data integrity, structural constraints, and types on raw and processed datasets with automated diagnostic reporting.
 - **XGBoost & Explainability**: Imbalance-aware training with probability calibration, optimal F1 threshold selection, auto-generated model cards, and SHAP-based feature attribution.
 - **Inference API**: High-performance FastAPI application supporting batch CSV prediction, status checks, and downloadable SHAP explainability reports.
@@ -33,7 +33,7 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
 | Configuration | Pydantic Settings |
 | API & Backend | FastAPI, Uvicorn, Structlog, Sentry |
 | Dashboard | Streamlit, Plotly |
-| Pipeline & Data Versioning | DVC, KaggleHub |
+| Pipeline & Data Versioning | DVC, DagsHub, KaggleHub |
 | Containerization | Podman, Podman-Compose, GHCR |
 | Quality | Ruff, Ty, Pre-commit, Hadolint Just |
 | Docs & Package management | MkDocs Material, UV |
@@ -153,7 +153,7 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
 - [Podman Compose](https://github.com/containers/podman-compose) (for multi-container orchestration)
 - [Hadolint](https://github.com/hadolint/hadolint) (for validating Containerfiles)
 - A [Kaggle](https://www.kaggle.com/settings) account and API token (for dataset ingestion)
-- A [DagsHub](https://dagshub.com/) repository (for DVC remote storage), optional
+- A [DagsHub](https://dagshub.com/) repository (for DVC remote storage)
 - A [Sentry](https://sentry.io/) DSN (for error monitoring in staging/production), optional
 
 ## Installation
@@ -197,20 +197,21 @@ cp .env.example .env
 
 Model, training, and schema hyperparameters live in [`params.yaml`](params.yaml) rather than environment variables.
 
-To configure the DVC locally:
+To configure the DVC with remote storage on DagsHub:
 
 ```bash
-dvc init
+just dvc-setup
 ```
 
 ## Usage Guide
 
 ### Run the training pipeline
 
-Run all stages end-to-end via DVC (respects the dependency graph and caches unchanged stages):
+Run all stages end-to-end via DVC (respects the dependency graph and caches unchanged stages) and push the generated artifacts to Dagsh:
 
 ```bash
 dvc repro
+dvc push -r origin
 ```
 
 Or run an individual stage directly:

@@ -61,7 +61,7 @@ class Environment(StrEnum):
     DEVELOPMENT = "development"
     STAGING = "staging"
     PRODUCTION = "production"
-    TEST = "test"
+    TESTING = "testing"
 
 
 class LogLevel(StrEnum):
@@ -271,14 +271,13 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=str(BASE_DIR / ".env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
     )
 
     # Runtime configuration
-    ENVIRONMENT: Environment = Field(default=Environment.DEVELOPMENT)
+    ENVIRONMENT: Environment = Field(default=Environment.PRODUCTION)
     LOG_LEVEL: LogLevel = Field(default=LogLevel.INFO)
     LOG_BACKUP_COUNT: int = Field(default=14, ge=1)
     LOG_ROTATION_WHEN: str = Field(default="midnight", pattern=r"^(midnight|[Hh]|[Dd]|[Ww])$")
@@ -287,7 +286,7 @@ class Settings(BaseSettings):
     FASTAPI_PORT: int = Field(default=8000, ge=1, le=65535)
 
     # API URLs
-    API_BASE_URL: str = ""
+    API_BASE_URL: str | None = None
     PREDICT_API_URL: str = ""
     DOWNLOAD_API_URL: str = ""
     EXPLAIN_API_URL: str = ""
@@ -300,7 +299,11 @@ class Settings(BaseSettings):
         Derives the URLs used by the prediction, download, explainability, and
         health-check clients from the application's API host and port settings.
         """
-        self.API_BASE_URL = f"http://{self.FASTAPI_HOST}:{self.FASTAPI_PORT}"
+        base_url = self.API_BASE_URL
+        if not base_url:
+            base_url = f"http://{self.FASTAPI_HOST}:{self.FASTAPI_PORT}"
+
+        self.API_BASE_URL = base_url.rstrip("/")
         self.PREDICT_API_URL = f"{self.API_BASE_URL}/api/v1/predict/batch"
         self.DOWNLOAD_API_URL = f"{self.API_BASE_URL}/api/v1/predictions/download"
         self.EXPLAIN_API_URL = f"{self.API_BASE_URL}/explain"
@@ -383,6 +386,15 @@ class Settings(BaseSettings):
 
             if not self.SENTRY_DSN:
                 missing.append("SENTRY_DSN")
+
+            if missing:
+                raise ValueError(
+                    f"Missing required secrets for {self.ENVIRONMENT.value} environment: "
+                    f"{', '.join(missing)}"
+                )
+        elif self.ENVIRONMENT in {Environment.DEVELOPMENT, Environment.TESTING}:
+            missing: list[str] = []
+
             if not self.KAGGLE_USERNAME or not self.KAGGLE_USERNAME.get_secret_value():
                 missing.append("KAGGLE_USERNAME")
             if not self.KAGGLE_KEY or not self.KAGGLE_KEY.get_secret_value():
@@ -399,23 +411,35 @@ class Settings(BaseSettings):
                     f"Missing required secrets for {self.ENVIRONMENT.value} environment: "
                     f"{', '.join(missing)}"
                 )
+        else:
+            raise ValueError(f"Unsupported environment: {self.ENVIRONMENT.value}")
 
         return self
 
 
 @lru_cache
 def get_settings() -> Settings:
-    """Return the cached application settings instance.
+    """Return the cached application settings.
 
-    Creates the application settings on first invocation, validates the
-    configuration, initializes required workspace directories, and caches
-    the resulting instance for subsequent calls.
+    This function loads the application settings
+    from the appropriate `.env` file based on the
+    current environment. The settings are cached to avoid
+    repeated loading and validation on subsequent calls.
 
     Returns
     -------
     Settings
-        Fully initialized and validated application settings.
+        The validated application settings object.
     """
-    settings = Settings()
+    if Path(BASE_DIR / ".env.dev").is_file():
+        selected_env_file = BASE_DIR / ".env.dev"
+    elif Path(BASE_DIR / ".env.prod").is_file():
+        selected_env_file = BASE_DIR / ".env.prod"
+    elif Path(BASE_DIR / ".env").is_file():
+        selected_env_file = BASE_DIR / ".env"
+    else:
+        raise FileNotFoundError("No valid .env file found.")
+
+    settings = Settings(_env_file=selected_env_file)
     settings.ensure_directories()
     return settings

@@ -23,6 +23,10 @@ COPY params.yaml README.md LICENSE ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-group docs
 
+# Create the required directories and copy the necessary files
+RUN mkdir -p data/raw
+COPY data/raw/test.csv ./data/raw/test.csv
+
 # Stage 2: Runtime
 FROM docker.io/library/python:3.12-slim AS runtime
 
@@ -49,5 +53,4 @@ USER 1000
 EXPOSE 8501
 
 # Run the application using streamlit
-ENTRYPOINT ["streamlit", "run", "src/churn_prediction/client/main.py"]
-CMD ["--server.address=0.0.0.0", "--server.port=8501"]
+CMD ["sh", "-c", "exec streamlit run src/churn_prediction/client/main.py --server.address=0.0.0.0 --server.port ${PORT:-8501}"]
