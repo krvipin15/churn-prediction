@@ -62,16 +62,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         settings.MODEL_DIR / "card.json",
     ]
 
-    # Check for the existence of the required artifacts
-    if not all(artifact.exists() for artifact in required_artifacts):
-        logger.critical(
-            "No artifacts found. Clone the repository `krvipin15/churn-prediction` \
-            and run `dvc repro` first to generate the required files."
-        )
-        raise FileNotFoundError(
-            "Required artifacts doesn't exists; Clone the repository `krvipin15/churn-prediction` \
-            and run `dvc repro` first to generate the required files."
-        )
+    missing_artifacts = [str(artifact) for artifact in required_artifacts if not artifact.is_file()]
+    if missing_artifacts:
+        logger.critical("Missing artifacts: %s", ", ".join(missing_artifacts))
+        raise FileNotFoundError("Required artifacts are missing.")
 
     # Load the pre-fitted encoder and XGBoost model
     try:

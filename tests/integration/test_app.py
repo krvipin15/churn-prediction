@@ -119,7 +119,7 @@ async def test_lifespan_missing_artifacts(
     monkeypatch.setattr(f"{APP_MODULE_PATH}.get_settings", lambda: mock_settings)
 
     app = FastAPI()
-    with pytest.raises(FileNotFoundError, match="Required artifacts doesn't exists"):
+    with pytest.raises(FileNotFoundError, match="Required artifacts are missing"):
         async with lifespan(app):
             pass
 

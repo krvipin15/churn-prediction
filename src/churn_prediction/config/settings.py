@@ -325,8 +325,6 @@ class Settings(BaseSettings):
     SENTRY_DSN: HttpUrl | None = Field(default=None)
     KAGGLE_USERNAME: SecretStr | None = Field(default=None)
     KAGGLE_KEY: SecretStr | None = Field(default=None)
-    GHCR_USER: str | None = Field(default=None)
-    GHCR_PAT: SecretStr | None = Field(default=None)
     DAGSHUB_ACCESS_ID: SecretStr | None = Field(default=None)
 
     # Internal Parameter Cache
@@ -399,10 +397,6 @@ class Settings(BaseSettings):
                 missing.append("KAGGLE_USERNAME")
             if not self.KAGGLE_KEY or not self.KAGGLE_KEY.get_secret_value():
                 missing.append("KAGGLE_KEY")
-            if not self.GHCR_USER:
-                missing.append("GHCR_USER")
-            if not self.GHCR_PAT:
-                missing.append("GHCR_PAT")
             if not self.DAGSHUB_ACCESS_ID:
                 missing.append("DAGSHUB_ACCESS_ID")
 
@@ -421,25 +415,20 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Return the cached application settings.
 
-    This function loads the application settings
-    from the appropriate `.env` file based on the
-    current environment. The settings are cached to avoid
-    repeated loading and validation on subsequent calls.
-
-    Returns
-    -------
-    Settings
-        The validated application settings object.
+    Local development may use a project-level environment file, while
+    deployment environments such as Render provide configuration directly
+    through environment variables.
     """
-    if Path(BASE_DIR / ".env.dev").is_file():
-        selected_env_file = BASE_DIR / ".env.dev"
-    elif Path(BASE_DIR / ".env.prod").is_file():
-        selected_env_file = BASE_DIR / ".env.prod"
-    elif Path(BASE_DIR / ".env").is_file():
-        selected_env_file = BASE_DIR / ".env"
-    else:
-        raise FileNotFoundError("No valid .env file found.")
+    env_file: Path | None = None
+    if (BASE_DIR / ".env").is_file():
+        env_file = BASE_DIR / ".env"
 
-    settings = Settings(_env_file=selected_env_file)
+    settings_kwargs: dict[str, Any] = {}
+
+    if env_file is not None:
+        settings_kwargs["_env_file"] = env_file
+
+    settings = Settings(**settings_kwargs)
     settings.ensure_directories()
+
     return settings

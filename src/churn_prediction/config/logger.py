@@ -82,6 +82,7 @@ def _init_sentry(dsn: str, environment: str) -> None:
         ],
         attach_stacktrace=True,
         send_default_pii=False,
+        traces_sample_rate=0.0,
     )
 
 
@@ -188,11 +189,14 @@ def configure_logging(*, force: bool = False) -> None:
 
         # Initialize the settings and determine the environment
         settings = get_settings()
-        is_production = settings.ENVIRONMENT.value == "production"
+        is_sentry_environment = settings.ENVIRONMENT.value in {"STAGING", "PRODUCTION"}
 
         # 0. Initialize Sentry
-        if settings.SENTRY_DSN and is_production:
-            _init_sentry(str(settings.SENTRY_DSN), settings.ENVIRONMENT.value)
+        if settings.SENTRY_DSN and is_sentry_environment:
+            _init_sentry(
+                str(settings.SENTRY_DSN),
+                settings.ENVIRONMENT.value,
+            )
 
         shared_processors = _get_shared_processors()
 
@@ -210,7 +214,7 @@ def configure_logging(*, force: bool = False) -> None:
         # 2. Choose renderer setup
         console_renderer = (
             structlog.processors.JSONRenderer()
-            if is_production
+            if is_sentry_environment
             else structlog.dev.ConsoleRenderer(colors=True)
         )
 
