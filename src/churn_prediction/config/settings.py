@@ -324,6 +324,7 @@ class Settings(BaseSettings):
     KAGGLE_KEY: SecretStr | None = Field(default=None)
     GHCR_USER: str | None = Field(default=None)
     GHCR_PAT: SecretStr | None = Field(default=None)
+    DAGSHUB_ACCESS_ID: SecretStr | None = Field(default=None)
 
     # Internal Parameter Cache
     _params_cache: PipelineParams | None = None
@@ -390,6 +391,8 @@ class Settings(BaseSettings):
                 missing.append("GHCR_USER")
             if not self.GHCR_PAT:
                 missing.append("GHCR_PAT")
+            if not self.DAGSHUB_ACCESS_ID:
+                missing.append("DAGSHUB_ACCESS_ID")
 
             if missing:
                 raise ValueError(

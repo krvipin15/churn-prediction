@@ -26,6 +26,7 @@ def mock_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
 
     (model_dir / "preprocessor.joblib").write_bytes(b"dummy joblib content")
     (model_dir / "model.ubj").write_bytes(b"dummy xgboost content")
+    (model_dir / "card.json").write_text('{ "name": "Test Model" }')
     (data_dir / "test.csv").write_text("customer_id,feature_1\n1,0.5")
 
     mock_settings = MagicMock()
@@ -59,9 +60,9 @@ def test_create_app_metadata_and_routes():
                     registered_paths.add(sub_path)
 
     # Verify at minimum that /health is registered
-    assert "/health" in registered_paths, (
-        f"Expected '/health' in registered routes. Found: {registered_paths}"
-    )
+    assert "/health" in registered_paths
+    assert "/predict" in registered_paths or any("predict" in p for p in registered_paths)
+    assert "/explain" in registered_paths or any("explain" in p for p in registered_paths)
 
 
 def test_cors_middleware_config():
@@ -78,6 +79,7 @@ def test_cors_middleware_config():
     assert cors_kwargs.get("allow_origins") == ["*"]
     assert cors_kwargs.get("allow_methods") == ["*"]
     assert cors_kwargs.get("allow_headers") == ["*"]
+    assert cors_kwargs.get("allow_credentials") is False
 
 
 @pytest.mark.asyncio
@@ -103,7 +105,10 @@ async def test_lifespan_success(mock_artifacts: dict[str, Path]):
 
 
 @pytest.mark.asyncio
-async def test_lifespan_missing_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+async def test_lifespan_missing_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
     """Test that lifespan raises FileNotFoundError when artifacts do not exist."""
     empty_dir = tmp_path / "empty"
     empty_dir.mkdir()
@@ -115,9 +120,13 @@ async def test_lifespan_missing_artifacts(tmp_path: Path, monkeypatch: pytest.Mo
     monkeypatch.setattr(f"{APP_MODULE_PATH}.get_settings", lambda: mock_settings)
 
     app = FastAPI()
-    with pytest.raises(FileNotFoundError, match="Required artifacts doesn't exists"):
-        async with lifespan(app):
-            pass
+    with patch(f"{APP_MODULE_PATH}._pull_artifacts") as mock_pull:
+        with pytest.raises(
+            FileNotFoundError, match="Required ML artifacts could not be retrieved from remote"
+        ):
+            async with lifespan(app):
+                pass
+        mock_pull.assert_called_once()
 
 
 @pytest.mark.asyncio
