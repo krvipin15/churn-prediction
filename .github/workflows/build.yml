@@ -64,16 +64,16 @@ jobs:
         env:
           DAGSHUB_ACCESS_ID: ${{ secrets.DAGSHUB_ACCESS_ID }}
         run: |
-          dvc remote modify origin --local access_key_id ${DAGSHUB_ACCESS_ID}
-          dvc remote modify origin --local secret_access_key ${DAGSHUB_ACCESS_ID}
+          uv run dvc remote modify origin --local access_key_id ${DAGSHUB_ACCESS_ID}
+          uv run dvc remote modify origin --local secret_access_key ${DAGSHUB_ACCESS_ID}
 
       # 7. Pull target-specific DVC artifacts
       - name: Pull target DVC artifacts
         run: |
           if [ "${{ matrix.service }}" = "api" ]; then
-            dvc pull models/preprocessor.joblib models/model.ubj models/card.json
+            uv run dvc pull models/preprocessor.joblib models/model.ubj models/card.json
           else
-            dvc pull data/raw/test.csv
+            uv run dvc pull data/raw/test.csv
           fi
 
       # 8. Login to GitHub Container Registry (GHCR)
