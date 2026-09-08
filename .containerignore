@@ -93,3 +93,7 @@ Desktop.ini
 *.swo
 *.md
 !README.md
+!data/raw/test.csv
+!models/model.ubj
+!models/card.json
+!models/preprocessor.joblib

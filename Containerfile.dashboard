@@ -36,7 +36,6 @@ RUN groupadd --system --gid 1000 app \
     && mkdir -p /app/logs /app/data /app/reports \
     && chown -R app:app /app
 
-
 WORKDIR /app
 
 # Copy only the virtualenv and the application files
