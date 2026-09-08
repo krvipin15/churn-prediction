@@ -22,6 +22,15 @@ env-setup:
     uv run pre-commit install --install-hooks -t pre-commit -t commit-msg -t pre-push
     @echo "success: Environment setup complete. Pre-commit hooks installed."
 
+# Initialize DVC and configure remote storage with optional force flag (-f)
+dvc-setup force_flag="":
+    uv run dvc init {{force_flag}}
+    uv run dvc remote add origin s3://dvc
+    uv run dvc remote modify origin endpointurl https://dagshub.com/vipinkr/churn-prediction.s3
+    uv run dvc remote modify origin --local access_key_id ${DAGSHUB_ACCESS_ID}
+    uv run dvc remote modify origin --local secret_access_key ${DAGSHUB_ACCESS_ID}
+    @echo "success: DVC initialized and remote storage configured."
+
 ## --- Development & Maintenance ---
 
 # Upgrade project lockfile dependencies

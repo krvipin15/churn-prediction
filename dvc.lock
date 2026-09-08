@@ -246,7 +246,7 @@ stages:
     outs:
     - path: models/card.json
       hash: md5
-      md5: f445016da5c193495fd488ad2c252be1
+      md5: 0a4da3498b3e8da72cebe4e483ba4619
       size: 5805
     - path: models/model.ubj
       hash: md5
