@@ -135,6 +135,7 @@ convention = "numpy"
 max-statements = 60
 
 [tool.pytest.ini_options]
+env = ["ENVIRONMENT=testing"]
 testpaths = ["tests"]
 pythonpath = ["."]
 python_files = ["test_*.py"]

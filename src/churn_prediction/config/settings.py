@@ -16,6 +16,7 @@ from pydantic import (
     ConfigDict,
     Field,
     HttpUrl,
+    PrivateAttr,
     SecretStr,
     ValidationError,
     model_validator,
@@ -271,13 +272,14 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
+        env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
     )
 
     # Runtime configuration
-    ENVIRONMENT: Environment = Field(default=Environment.PRODUCTION)
+    ENVIRONMENT: Environment = Field(default=Environment.DEVELOPMENT)
     LOG_LEVEL: LogLevel = Field(default=LogLevel.INFO)
     LOG_BACKUP_COUNT: int = Field(default=14, ge=1)
     LOG_ROTATION_WHEN: str = Field(default="midnight", pattern=r"^(midnight|[Hh]|[Dd]|[Ww])$")
@@ -291,25 +293,6 @@ class Settings(BaseSettings):
     DOWNLOAD_API_URL: str = ""
     EXPLAIN_API_URL: str = ""
     HEALTH_API_URL: str = ""
-
-    @model_validator(mode="after")
-    def assemble_api_urls(self) -> "Settings":
-        """Construct API endpoint URLs from the configured host and port.
-
-        Derives the URLs used by the prediction, download, explainability, and
-        health-check clients from the application's API host and port settings.
-        """
-        base_url = self.API_BASE_URL
-        if not base_url:
-            base_url = f"http://{self.FASTAPI_HOST}:{self.FASTAPI_PORT}"
-
-        self.API_BASE_URL = base_url.rstrip("/")
-        self.PREDICT_API_URL = f"{self.API_BASE_URL}/api/v1/predict/batch"
-        self.DOWNLOAD_API_URL = f"{self.API_BASE_URL}/api/v1/predictions/download"
-        self.EXPLAIN_API_URL = f"{self.API_BASE_URL}/explain"
-        self.HEALTH_API_URL = f"{self.API_BASE_URL}/health"
-
-        return self
 
     # Workspace Paths
     LOGS_DIR: Path = Field(default_factory=lambda: BASE_DIR / "logs")
@@ -328,7 +311,23 @@ class Settings(BaseSettings):
     DAGSHUB_ACCESS_ID: SecretStr | None = Field(default=None)
 
     # Internal Parameter Cache
-    _params_cache: PipelineParams | None = None
+    _params_cache: PipelineParams | None = PrivateAttr(default=None)
+
+    @model_validator(mode="after")
+    def assemble_api_urls(self) -> "Settings":
+        """Construct API endpoint URLs from the configured host and port.
+
+        Derives the URLs used by the prediction, download, explainability, and
+        health-check clients from the application's API host and port settings.
+        """
+        base_url = self.API_BASE_URL or f"http://{self.FASTAPI_HOST}:{self.FASTAPI_PORT}"
+        self.API_BASE_URL = base_url.rstrip("/")
+        self.PREDICT_API_URL = f"{self.API_BASE_URL}/api/v1/predict/batch"
+        self.DOWNLOAD_API_URL = f"{self.API_BASE_URL}/api/v1/predictions/download"
+        self.EXPLAIN_API_URL = f"{self.API_BASE_URL}/explain"
+        self.HEALTH_API_URL = f"{self.API_BASE_URL}/health"
+
+        return self
 
     @property
     def PARAMS(self) -> PipelineParams:
@@ -379,34 +378,16 @@ class Settings(BaseSettings):
             If a required credential is missing or invalid for the selected
             environment.
         """
-        if self.ENVIRONMENT in {Environment.PRODUCTION, Environment.STAGING}:
-            missing: list[str] = []
+        if self.ENVIRONMENT == Environment.TESTING:
+            return self
 
-            if not self.SENTRY_DSN:
-                missing.append("SENTRY_DSN")
-
-            if missing:
-                raise ValueError(
-                    f"Missing required secrets for {self.ENVIRONMENT.value} environment: "
-                    f"{', '.join(missing)}"
-                )
-        elif self.ENVIRONMENT in {Environment.DEVELOPMENT, Environment.TESTING}:
-            missing: list[str] = []
-
-            if not self.KAGGLE_USERNAME or not self.KAGGLE_USERNAME.get_secret_value():
-                missing.append("KAGGLE_USERNAME")
-            if not self.KAGGLE_KEY or not self.KAGGLE_KEY.get_secret_value():
-                missing.append("KAGGLE_KEY")
-            if not self.DAGSHUB_ACCESS_ID:
-                missing.append("DAGSHUB_ACCESS_ID")
-
-            if missing:
-                raise ValueError(
-                    f"Missing required secrets for {self.ENVIRONMENT.value} environment: "
-                    f"{', '.join(missing)}"
-                )
-        else:
-            raise ValueError(f"Unsupported environment: {self.ENVIRONMENT.value}")
+        if (
+            self.ENVIRONMENT in {Environment.PRODUCTION, Environment.STAGING}
+            and not self.SENTRY_DSN
+        ):
+            raise ValueError(
+                f"Missing required secrets for {self.ENVIRONMENT.value} environment: SENTRY_DSN"
+            )
 
         return self
 
@@ -419,16 +400,7 @@ def get_settings() -> Settings:
     deployment environments such as Render provide configuration directly
     through environment variables.
     """
-    env_file: Path | None = None
-    if (BASE_DIR / ".env").is_file():
-        env_file = BASE_DIR / ".env"
-
-    settings_kwargs: dict[str, Any] = {}
-
-    if env_file is not None:
-        settings_kwargs["_env_file"] = env_file
-
-    settings = Settings(**settings_kwargs)
+    settings = Settings()
     settings.ensure_directories()
 
     return settings
