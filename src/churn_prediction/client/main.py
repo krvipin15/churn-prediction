@@ -540,6 +540,14 @@ def main() -> None:
     """
     settings = get_settings()
 
+    # Ensure the demo dataset exists
+    if not (settings.RAW_DATA_DIR / "test.csv").is_file():
+        st.error(
+            "Demo dataset not found. Please ensure the `test.csv` file is present in the "
+            f"`{settings.RAW_DATA_DIR}` directory."
+        )
+        raise FileNotFoundError("Demo dataset is missing.")
+
     # Top Hero Section (White Card Styling)
     st.markdown(
         """

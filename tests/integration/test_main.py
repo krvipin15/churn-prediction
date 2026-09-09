@@ -171,7 +171,6 @@ def patch_columns(monkeypatch, dashboard):
 
     def fake_columns(spec):
         count = spec if isinstance(spec, int) else len(spec)
-
         return [MockColumn() for _ in range(count)]
 
     monkeypatch.setattr(
@@ -190,6 +189,7 @@ def patch_streamlit_ui(monkeypatch, dashboard):
     monkeypatch.setattr(dashboard.st, "dataframe", Mock())
     monkeypatch.setattr(dashboard.st, "download_button", Mock())
     monkeypatch.setattr(dashboard.st, "button", Mock(return_value=False))
+    monkeypatch.setattr(dashboard.st, "error", Mock())
 
     def fake_columns(spec):
         """Return fake columns for integer or ratio specifications."""
@@ -384,13 +384,9 @@ def test_run_pipeline_local_file_success(
     dashboard.run_pipeline(input_file)
 
     predict_batch.assert_called_once_with(str(input_file))
-
     download_predictions.assert_called_once()
-
     assert download_predictions.call_args.args[0] == "batch-001"
-
     explain_batch.assert_called_once_with("batch-001")
-
     load_artifacts.assert_called_once_with(Path(tempfile.gettempdir()) / "artifacts")
 
     assert session_state.done is True
@@ -551,7 +547,6 @@ def test_run_pipeline_uploaded_file_success(
     predict_batch.assert_called_once()
 
     input_path = Path(predict_batch.call_args.args[0])
-
     assert input_path.exists() is False
 
     assert session_state.done is True
@@ -583,7 +578,6 @@ def test_run_pipeline_uploaded_file_cleanup(
     def fake_predict_batch(path):
         """Capture the temporary input path."""
         captured_input_path["path"] = Path(path)
-
         return {
             "batch_id": "cleanup-batch",
         }
@@ -678,9 +672,7 @@ def test_run_pipeline_missing_local_file(
     dashboard.run_pipeline(input_file)
 
     error.assert_called_once_with(f"Dataset file not found at: `{input_file}`")
-
     predict_batch.assert_not_called()
-
     assert session_state.done is False
 
 
@@ -724,9 +716,7 @@ def test_run_pipeline_prediction_api_error(
     dashboard.run_pipeline(input_file)
 
     error.assert_called_once_with("Inference Pipeline Error: prediction API unavailable")
-
     exception.assert_called_once_with(request_error)
-
     assert session_state.done is False
 
 
@@ -779,9 +769,7 @@ def test_run_pipeline_download_api_error(
     dashboard.run_pipeline(input_file)
 
     error.assert_called_once_with("Inference Pipeline Error: download failed")
-
     exception.assert_called_once_with(request_error)
-
     assert session_state.done is False
 
 
@@ -841,9 +829,7 @@ def test_run_pipeline_explain_api_error(
     dashboard.run_pipeline(input_file)
 
     error.assert_called_once_with("Inference Pipeline Error: explainability service unavailable")
-
     exception.assert_called_once_with(request_error)
-
     assert session_state.done is False
 
 
@@ -878,26 +864,10 @@ def test_render_kpis(
     )
 
     assert metric.call_count == 4
-
-    assert metric.call_args_list[0].args == (
-        "Total Cohort",
-        "4",
-    )
-
-    assert metric.call_args_list[1].args == (
-        "Avg. Churn Rate",
-        "49.8%",
-    )
-
-    assert metric.call_args_list[2].args == (
-        "High-Risk Count",
-        "2",
-    )
-
-    assert metric.call_args_list[3].args == (
-        "At Risk %",
-        "50.0%",
-    )
+    assert metric.call_args_list[0].args == ("Total Cohort", "4")
+    assert metric.call_args_list[1].args == ("Avg. Churn Rate", "49.8%")
+    assert metric.call_args_list[2].args == ("High-Risk Count", "2")
+    assert metric.call_args_list[3].args == ("At Risk %", "50.0%")
 
 
 def test_render_feature_importance(
@@ -927,13 +897,11 @@ def test_render_feature_importance(
     dashboard.render_feature_importance(feature_importance)
 
     plotly_chart.assert_called_once()
-
     figure = plotly_chart.call_args.args[0]
 
     assert figure.layout.height == 360
     assert len(figure.data) == 1
     assert figure.data[0].orientation == "h"
-
     assert list(figure.data[0].y) == [
         "tenure",
         "monthly_charges",
@@ -971,16 +939,13 @@ def test_render_risk_distribution(
     )
 
     plotly_chart.assert_called_once()
-
     figure = plotly_chart.call_args.args[0]
 
     assert len(figure.data) == 1
     assert figure.data[0].type == "histogram"
-
     assert len(figure.layout.shapes) == 1
 
     threshold_line = figure.layout.shapes[0]
-
     assert threshold_line.x0 == 0.5
     assert threshold_line.x1 == 0.5
     assert threshold_line.line.dash == "dash"
@@ -1018,24 +983,11 @@ def test_render_customer_table_sorts_by_risk(
     )
 
     assert selected_customer == 101
-
     dataframe.assert_called_once()
 
     rendered = dataframe.call_args.args[0]
-
-    assert rendered["customer_id"].tolist() == [
-        101,
-        102,
-        103,
-        104,
-    ]
-
-    assert rendered["churn_probability"].tolist() == [
-        0.91,
-        0.72,
-        0.31,
-        0.05,
-    ]
+    assert rendered["customer_id"].tolist() == [101, 102, 103, 104]
+    assert rendered["churn_probability"].tolist() == [0.91, 0.72, 0.31, 0.05]
 
 
 def test_render_customer_table_selects_customer(
@@ -1175,26 +1127,14 @@ def test_render_customer_detail_positive_and_negative_drivers(
     )
 
     plotly_chart.assert_called_once()
-
     figure = plotly_chart.call_args.args[0]
 
     assert len(figure.data) == 1
     assert figure.data[0].orientation == "h"
-
-    assert list(figure.data[0].x) == [
-        0.50,
-        -0.20,
-        0.30,
-    ]
-
-    assert list(figure.data[0].y) == [
-        "contract",
-        "tenure",
-        "monthly_charges",
-    ]
+    assert list(figure.data[0].x) == [0.50, -0.20, 0.30]
+    assert list(figure.data[0].y) == ["contract", "tenure", "monthly_charges"]
 
     recommendation.assert_any_call("contract")
-
     recommendation.assert_any_call("monthly_charges")
 
 
@@ -1268,7 +1208,6 @@ def test_render_customer_detail_only_negative_drivers(
     success.assert_called_once_with(
         "✅ This customer exhibits low risk across all primary operational drivers."
     )
-
     recommendation.assert_not_called()
 
 
@@ -1331,13 +1270,11 @@ def test_render_customer_detail_limits_recommendations_to_three(
         "container",
         lambda **_kwargs: NullContext(),
     )
-
     monkeypatch.setattr(
         dashboard,
         "customer_shap_breakdown",
         Mock(return_value=breakdown),
     )
-
     monkeypatch.setattr(
         dashboard,
         "recommend_for_feature",
@@ -1350,7 +1287,6 @@ def test_render_customer_detail_limits_recommendations_to_three(
     )
 
     assert recommendation.call_count == 3
-
     recommended_features = [call.args[0] for call in recommendation.call_args_list]
 
     assert recommended_features == [
@@ -1376,7 +1312,6 @@ def test_inject_custom_css(
     dashboard.inject_custom_css()
 
     markdown.assert_called_once()
-
     css = markdown.call_args.args[0]
 
     assert "<style>" in css
@@ -1386,12 +1321,41 @@ def test_inject_custom_css(
     assert ".hero-subtitle" in css
     assert ".custom-card" in css
     assert "stMetricValue" in css
-
     assert dashboard.THEME_PALETTE["primary"] in css
-
     assert dashboard.THEME_PALETTE["neutral_dark"] in css
-
     assert markdown.call_args.kwargs["unsafe_allow_html"] is True
+
+
+def test_main_missing_demo_dataset(
+    dashboard,
+    monkeypatch,
+    tmp_path: Path,
+    session_state,
+    patch_streamlit_ui,
+):
+    """Missing demo dataset test.csv should display an error and raise FileNotFoundError."""
+    settings = SimpleNamespace(
+        RAW_DATA_DIR=tmp_path,
+    )
+
+    monkeypatch.setattr(
+        dashboard.st,
+        "session_state",
+        session_state,
+    )
+    monkeypatch.setattr(
+        dashboard,
+        "get_settings",
+        Mock(return_value=settings),
+    )
+
+    with pytest.raises(FileNotFoundError, match="Demo dataset is missing"):
+        dashboard.main()
+
+    dashboard.st.error.assert_called_once_with(
+        "Demo dataset not found. Please ensure the `test.csv` file is present in the "
+        f"`{settings.RAW_DATA_DIR}` directory."
+    )
 
 
 def test_main_without_completed_pipeline(
@@ -1402,6 +1366,9 @@ def test_main_without_completed_pipeline(
     patch_streamlit_ui,
 ):
     """Main should render the ingestion UI when no pipeline is complete."""
+    demo_file = tmp_path / "test.csv"
+    demo_file.write_text("customer_id,value\n101,1\n")
+
     settings = SimpleNamespace(
         RAW_DATA_DIR=tmp_path,
     )
@@ -1411,13 +1378,11 @@ def test_main_without_completed_pipeline(
         "session_state",
         session_state,
     )
-
     monkeypatch.setattr(
         dashboard,
         "get_settings",
         Mock(return_value=settings),
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "file_uploader",
@@ -1427,7 +1392,6 @@ def test_main_without_completed_pipeline(
     dashboard.main()
 
     assert session_state.done is False
-
     dashboard.st.subheader.assert_any_call("1. Ingest Batch Data")
 
 
@@ -1440,7 +1404,6 @@ def test_main_demo_button_runs_pipeline(
 ):
     """The Demo Dataset button should execute the local test dataset."""
     demo_file = tmp_path / "test.csv"
-
     demo_file.write_text("customer_id,value\n101,1\n")
 
     settings = SimpleNamespace(
@@ -1454,34 +1417,25 @@ def test_main_demo_button_runs_pipeline(
         "session_state",
         session_state,
     )
-
     monkeypatch.setattr(
         dashboard,
         "get_settings",
         Mock(return_value=settings),
     )
-
     monkeypatch.setattr(
         dashboard,
         "run_pipeline",
         run_pipeline,
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "file_uploader",
         Mock(return_value=None),
     )
-
-    # Only the Demo Dataset button exists when no file is uploaded.
     monkeypatch.setattr(
         dashboard.st,
         "button",
-        Mock(
-            side_effect=[
-                True,
-            ]
-        ),
+        Mock(side_effect=[True]),
     )
 
     dashboard.main()
@@ -1497,6 +1451,9 @@ def test_main_uploaded_file_preview(
     patch_streamlit_ui,
 ):
     """Uploaded data should be previewed before execution."""
+    demo_file = tmp_path / "test.csv"
+    demo_file.write_text("customer_id,value\n101,1\n")
+
     uploaded_file = MockUploadedFile(b"customer_id,value\n101,10\n102,20\n")
 
     settings = SimpleNamespace(
@@ -1510,62 +1467,38 @@ def test_main_uploaded_file_preview(
         "session_state",
         session_state,
     )
-
     monkeypatch.setattr(
         dashboard,
         "get_settings",
         Mock(return_value=settings),
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "file_uploader",
         Mock(return_value=uploaded_file),
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "dataframe",
         dataframe,
     )
-
-    # Demo button = False.
-    # Execute button = False.
     monkeypatch.setattr(
         dashboard.st,
         "button",
-        Mock(
-            side_effect=[
-                False,
-                False,
-            ]
-        ),
+        Mock(side_effect=[False, False]),
     )
 
     dashboard.main()
 
     dataframe.assert_called_once()
-
     preview = dataframe.call_args.args[0]
 
-    assert isinstance(
-        preview,
-        pd.DataFrame,
-    )
-
-    assert list(preview["customer_id"]) == [
-        101,
-        102,
-    ]
-
-    assert list(preview["value"]) == [
-        10,
-        20,
-    ]
+    assert isinstance(preview, pd.DataFrame)
+    assert list(preview["customer_id"]) == [101, 102]
+    assert list(preview["value"]) == [10, 20]
 
     uploaded_file.seek(0)
-
-    assert uploaded_file.read() == (b"customer_id,value\n101,10\n102,20\n")
+    assert uploaded_file.read() == b"customer_id,value\n101,10\n102,20\n"
 
 
 def test_main_uploaded_file_execute_pipeline(
@@ -1576,6 +1509,9 @@ def test_main_uploaded_file_execute_pipeline(
     patch_streamlit_ui,
 ):
     """The execution button should pass the uploaded file to run_pipeline."""
+    demo_file = tmp_path / "test.csv"
+    demo_file.write_text("customer_id,value\n101,1\n")
+
     uploaded_file = MockUploadedFile(b"customer_id,value\n101,10\n")
 
     settings = SimpleNamespace(
@@ -1589,34 +1525,25 @@ def test_main_uploaded_file_execute_pipeline(
         "session_state",
         session_state,
     )
-
     monkeypatch.setattr(
         dashboard,
         "get_settings",
         Mock(return_value=settings),
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "file_uploader",
         Mock(return_value=uploaded_file),
     )
-
     monkeypatch.setattr(
         dashboard,
         "run_pipeline",
         run_pipeline,
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "button",
-        Mock(
-            side_effect=[
-                False,
-                True,
-            ]
-        ),
+        Mock(side_effect=[False, True]),
     )
 
     dashboard.main()
@@ -1635,8 +1562,10 @@ def test_main_completed_pipeline(
     patch_column_config,
 ):
     """Completed pipeline state should render the complete dashboard."""
-    predictions_file = tmp_path / "predictions.csv"
+    demo_file = tmp_path / "test.csv"
+    demo_file.write_text("customer_id,value\n101,1\n")
 
+    predictions_file = tmp_path / "predictions.csv"
     predictions_file.write_text("customer_id,churn_probability\n101,0.91\n")
 
     session_state.done = True
@@ -1659,13 +1588,11 @@ def test_main_completed_pipeline(
         "session_state",
         session_state,
     )
-
     monkeypatch.setattr(
         dashboard,
         "get_settings",
         Mock(return_value=settings),
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "file_uploader",
@@ -1678,35 +1605,11 @@ def test_main_completed_pipeline(
     render_customer_table = Mock(return_value=101)
     render_customer_detail = Mock()
 
-    monkeypatch.setattr(
-        dashboard,
-        "render_kpis",
-        render_kpis,
-    )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_feature_importance",
-        render_feature_importance,
-    )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_risk_distribution",
-        render_risk_distribution,
-    )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_customer_table",
-        render_customer_table,
-    )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_customer_detail",
-        render_customer_detail,
-    )
+    monkeypatch.setattr(dashboard, "render_kpis", render_kpis)
+    monkeypatch.setattr(dashboard, "render_feature_importance", render_feature_importance)
+    monkeypatch.setattr(dashboard, "render_risk_distribution", render_risk_distribution)
+    monkeypatch.setattr(dashboard, "render_customer_table", render_customer_table)
+    monkeypatch.setattr(dashboard, "render_customer_detail", render_customer_detail)
 
     dashboard.main()
 
@@ -1714,33 +1617,27 @@ def test_main_completed_pipeline(
         artifacts["risk_profiles"],
         "churn_probability",
     )
-
     render_feature_importance.assert_called_once_with(
         artifacts["feature_importance"],
     )
-
     render_risk_distribution.assert_called_once_with(
         artifacts["risk_profiles"],
         "churn_probability",
     )
-
     render_customer_table.assert_called_once_with(
         artifacts["risk_profiles"],
         "customer_id",
         "churn_probability",
     )
-
     render_customer_detail.assert_called_once_with(
         artifacts["risk_profiles"],
         101,
     )
 
     dashboard.st.download_button.assert_called_once()
-
     download_kwargs = dashboard.st.download_button.call_args.kwargs
 
     assert download_kwargs["file_name"] == "churn_predictions_batch_batch-999.csv"
-
     assert download_kwargs["mime"] == "text/csv"
 
 
@@ -1755,8 +1652,10 @@ def test_main_completed_pipeline_uses_customer_selection(
     patch_column_config,
 ):
     """Customer detail should receive the selected customer ID."""
-    predictions_file = tmp_path / "predictions.csv"
+    demo_file = tmp_path / "test.csv"
+    demo_file.write_text("customer_id,value\n101,1\n")
 
+    predictions_file = tmp_path / "predictions.csv"
     predictions_file.write_text("customer_id,churn_probability\n101,0.91\n")
 
     session_state.done = True
@@ -1773,50 +1672,23 @@ def test_main_completed_pipeline_uses_customer_selection(
         "session_state",
         session_state,
     )
-
     monkeypatch.setattr(
         dashboard,
         "get_settings",
         Mock(return_value=settings),
     )
-
     monkeypatch.setattr(
         dashboard.st,
         "file_uploader",
         Mock(return_value=None),
     )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_kpis",
-        Mock(),
-    )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_feature_importance",
-        Mock(),
-    )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_risk_distribution",
-        Mock(),
-    )
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_customer_table",
-        Mock(return_value=103),
-    )
+    monkeypatch.setattr(dashboard, "render_kpis", Mock())
+    monkeypatch.setattr(dashboard, "render_feature_importance", Mock())
+    monkeypatch.setattr(dashboard, "render_risk_distribution", Mock())
+    monkeypatch.setattr(dashboard, "render_customer_table", Mock(return_value=103))
 
     render_customer_detail = Mock()
-
-    monkeypatch.setattr(
-        dashboard,
-        "render_customer_detail",
-        render_customer_detail,
-    )
+    monkeypatch.setattr(dashboard, "render_customer_detail", render_customer_detail)
 
     dashboard.main()
 

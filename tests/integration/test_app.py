@@ -27,7 +27,6 @@ def mock_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str,
     (model_dir / "preprocessor.joblib").write_bytes(b"dummy joblib content")
     (model_dir / "model.ubj").write_bytes(b"dummy xgboost content")
     (model_dir / "card.json").write_text('{ "name": "Test Model" }')
-    (data_dir / "test.csv").write_text("customer_id,feature_1\n1,0.5")
 
     mock_settings = MagicMock()
     mock_settings.MODEL_DIR = model_dir

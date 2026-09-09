@@ -56,7 +56,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     # Resolve base directory
     required_artifacts = [
-        settings.RAW_DATA_DIR / "test.csv",
         settings.MODEL_DIR / "preprocessor.joblib",
         settings.MODEL_DIR / "model.ubj",
         settings.MODEL_DIR / "card.json",
