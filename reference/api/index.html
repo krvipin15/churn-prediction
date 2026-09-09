@@ -1317,7 +1317,8 @@ prediction, explainability, download, and health endpoints.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/churn_prediction/api/app.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 92</span>
+<span class="normal"> 93</span>
 <span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
@@ -1368,8 +1369,7 @@ prediction, explainability, download, and health endpoints.</p>
 <span class="normal">141</span>
 <span class="normal">142</span>
 <span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">FastAPI</span><span class="p">:</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">FastAPI</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Create and configure the FastAPI application.</span>
 
 <span class="sd">    Initializes the application metadata, lifecycle management, CORS</span>
@@ -1607,8 +1607,7 @@ dataset cannot be found.</p>
 <span class="normal">86</span>
 <span class="normal">87</span>
 <span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@asynccontextmanager</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@asynccontextmanager</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Manage startup and shutdown of the FastAPI application.</span>
 
@@ -1641,12 +1640,11 @@ dataset cannot be found.</p>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">()</span>
 
-    <span class="c1"># Resolve base directory</span>
-    <span class="n">required_artifacts</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span> <span class="o">/</span> <span class="s2">"preprocessor.joblib"</span><span class="p">,</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span> <span class="o">/</span> <span class="s2">"model.ubj"</span><span class="p">,</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span> <span class="o">/</span> <span class="s2">"card.json"</span><span class="p">,</span>
-    <span class="p">]</span>
+    <span class="c1"># Define paths to required ML artifacts</span>
+    <span class="n">encoder_path</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span> <span class="o">/</span> <span class="s2">"preprocessor.joblib"</span>
+    <span class="n">booster_path</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span> <span class="o">/</span> <span class="s2">"model.ubj"</span>
+    <span class="n">card_path</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MODEL_DIR</span> <span class="o">/</span> <span class="s2">"card.json"</span>
+    <span class="n">required_artifacts</span> <span class="o">=</span> <span class="p">[</span><span class="n">encoder_path</span><span class="p">,</span> <span class="n">booster_path</span><span class="p">,</span> <span class="n">card_path</span><span class="p">]</span>
 
     <span class="n">missing_artifacts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span> <span class="k">for</span> <span class="n">artifact</span> <span class="ow">in</span> <span class="n">required_artifacts</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">artifact</span><span class="o">.</span><span class="n">is_file</span><span class="p">()]</span>
     <span class="k">if</span> <span class="n">missing_artifacts</span><span class="p">:</span>
@@ -1656,11 +1654,11 @@ dataset cannot be found.</p>
     <span class="c1"># Load the pre-fitted encoder and XGBoost model</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading preprocessor artifact (joblib)..."</span><span class="p">)</span>
-        <span class="n">encoder</span><span class="p">:</span> <span class="n">OrdinalEncoder</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">required_artifacts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">encoder</span><span class="p">:</span> <span class="n">OrdinalEncoder</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">encoder_path</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading XGBoost booster model..."</span><span class="p">)</span>
         <span class="n">booster</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">Booster</span><span class="p">()</span>
-        <span class="n">booster</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">required_artifacts</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">booster</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">booster_path</span><span class="p">))</span>
 
         <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span>
         <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">booster</span> <span class="o">=</span> <span class="n">booster</span>
