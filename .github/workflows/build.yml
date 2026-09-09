@@ -64,20 +64,10 @@ jobs:
         env:
           DAGSHUB_ACCESS_ID: ${{ secrets.DAGSHUB_ACCESS_ID }}
         run: |
-          if [ -f ".dvc/config" ]; then
-            echo "DVC config found. Configuring existing remote..."
-            uv run dvc remote add -d origin s3://dvc || true
+            uv run dvc remote add -fd origin s3://dvc || true
             uv run dvc remote modify origin endpointurl https://dagshub.com/vipinkr/churn-prediction.s3
             uv run dvc remote modify origin --local access_key_id ${DAGSHUB_ACCESS_ID}
             uv run dvc remote modify origin --local secret_access_key ${DAGSHUB_ACCESS_ID}
-          else
-            echo "DVC config not found. Initializing DVC..."
-            uv run dvc init -f
-            uv run dvc remote add origin s3://dvc
-            uv run dvc remote modify origin endpointurl https://dagshub.com/vipinkr/churn-prediction.s3
-            uv run dvc remote modify origin --local access_key_id ${DAGSHUB_ACCESS_ID}
-            uv run dvc remote modify origin --local secret_access_key ${DAGSHUB_ACCESS_ID}
-          fi
 
       # 7. Pull target-specific DVC artifacts
       - name: Pull target DVC artifacts
