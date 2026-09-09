@@ -5,12 +5,12 @@ stages:
     deps:
     - path: src/churn_prediction/config/logger.py
       hash: md5
-      md5: 59197bbbd74bb211d3dd2833be640bdb
-      size: 9856
+      md5: 2dc42121392d7031d5f58b58b50d8341
+      size: 9972
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 13907dc5b5ab7df1a458bc2798b89b4d
-      size: 14982
+      md5: 0b288676e21931fb09b496b3b74cba00
+      size: 13743
     - path: src/churn_prediction/data/ingestion.py
       hash: md5
       md5: 98234f9f573a9a4c8df70606dd3acb4b
@@ -37,12 +37,12 @@ stages:
       size: 4702042
     - path: src/churn_prediction/config/logger.py
       hash: md5
-      md5: 59197bbbd74bb211d3dd2833be640bdb
-      size: 9856
+      md5: 2dc42121392d7031d5f58b58b50d8341
+      size: 9972
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 13907dc5b5ab7df1a458bc2798b89b4d
-      size: 14982
+      md5: 0b288676e21931fb09b496b3b74cba00
+      size: 13743
     - path: src/churn_prediction/data/schemas.py
       hash: md5
       md5: 612cf1bb0fb71baf01eacabf7b2305e1
@@ -64,12 +64,12 @@ stages:
       size: 4702042
     - path: src/churn_prediction/config/logger.py
       hash: md5
-      md5: 59197bbbd74bb211d3dd2833be640bdb
-      size: 9856
+      md5: 2dc42121392d7031d5f58b58b50d8341
+      size: 9972
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 13907dc5b5ab7df1a458bc2798b89b4d
-      size: 14982
+      md5: 0b288676e21931fb09b496b3b74cba00
+      size: 13743
     - path: src/churn_prediction/features/train_preprocessing.py
       hash: md5
       md5: bcff1a707a9f99789479917df011ed2f
@@ -145,12 +145,12 @@ stages:
       size: 3757208
     - path: src/churn_prediction/config/logger.py
       hash: md5
-      md5: 59197bbbd74bb211d3dd2833be640bdb
-      size: 9856
+      md5: 2dc42121392d7031d5f58b58b50d8341
+      size: 9972
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 13907dc5b5ab7df1a458bc2798b89b4d
-      size: 14982
+      md5: 0b288676e21931fb09b496b3b74cba00
+      size: 13743
     - path: src/churn_prediction/data/schemas.py
       hash: md5
       md5: 612cf1bb0fb71baf01eacabf7b2305e1
@@ -172,12 +172,12 @@ stages:
       size: 991005
     - path: src/churn_prediction/config/logger.py
       hash: md5
-      md5: 59197bbbd74bb211d3dd2833be640bdb
-      size: 9856
+      md5: 2dc42121392d7031d5f58b58b50d8341
+      size: 9972
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 13907dc5b5ab7df1a458bc2798b89b4d
-      size: 14982
+      md5: 0b288676e21931fb09b496b3b74cba00
+      size: 13743
     - path: src/churn_prediction/data/schemas.py
       hash: md5
       md5: 612cf1bb0fb71baf01eacabf7b2305e1
@@ -203,12 +203,12 @@ stages:
       size: 991005
     - path: src/churn_prediction/config/logger.py
       hash: md5
-      md5: 59197bbbd74bb211d3dd2833be640bdb
-      size: 9856
+      md5: 2dc42121392d7031d5f58b58b50d8341
+      size: 9972
     - path: src/churn_prediction/config/settings.py
       hash: md5
-      md5: 13907dc5b5ab7df1a458bc2798b89b4d
-      size: 14982
+      md5: 0b288676e21931fb09b496b3b74cba00
+      size: 13743
     - path: src/churn_prediction/model/training.py
       hash: md5
       md5: f1c79dcafa8955604f45b93047dfae4c
@@ -246,7 +246,7 @@ stages:
     outs:
     - path: models/card.json
       hash: md5
-      md5: 160de57a24f4a3bb9cad654af23cb5cd
+      md5: 43d03609bff48560bc543393424c8cc7
       size: 5805
     - path: models/model.ubj
       hash: md5
