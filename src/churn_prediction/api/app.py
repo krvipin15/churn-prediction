@@ -54,12 +54,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger = get_logger()
     settings = get_settings()
 
-    # Resolve base directory
-    required_artifacts = [
-        settings.MODEL_DIR / "preprocessor.joblib",
-        settings.MODEL_DIR / "model.ubj",
-        settings.MODEL_DIR / "card.json",
-    ]
+    # Define paths to required ML artifacts
+    encoder_path = settings.MODEL_DIR / "preprocessor.joblib"
+    booster_path = settings.MODEL_DIR / "model.ubj"
+    card_path = settings.MODEL_DIR / "card.json"
+    required_artifacts = [encoder_path, booster_path, card_path]
 
     missing_artifacts = [str(artifact) for artifact in required_artifacts if not artifact.is_file()]
     if missing_artifacts:
@@ -69,11 +68,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Load the pre-fitted encoder and XGBoost model
     try:
         logger.info("Loading preprocessor artifact (joblib)...")
-        encoder: OrdinalEncoder = joblib.load(required_artifacts[1])
+        encoder: OrdinalEncoder = joblib.load(encoder_path)
 
         logger.info("Loading XGBoost booster model...")
         booster = xgb.Booster()
-        booster.load_model(str(required_artifacts[2]))
+        booster.load_model(str(booster_path))
 
         app.state.encoder = encoder
         app.state.booster = booster
