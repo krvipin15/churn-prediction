@@ -883,16 +883,17 @@
 
 
 <h1 id="churn-prediction">Churn Prediction<a class="headerlink" href="#churn-prediction" title="Permanent link">&para;</a></h1>
-<p>Production-grade MLOps pipeline, serving infrastructure, and containerized deployment for predicting customer churn. The project covers the full end-to-end lifecycle — automated data ingestion, Pandera schema validation, feature engineering, XGBoost model training, SHAP explainability, FastAPI serving, interactive Streamlit UI, and multi-container orchestration with Podman.</p>
+<p>Production-grade MLOps pipeline and serving infrastructure for predicting customer churn. The project covers the full lifecycle — automated data ingestion, Pandera schema validation, feature engineering, XGBoost model training, SHAP explainability, FastAPI serving, interactive Streamlit UI, and containerized deployment.</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Reproducible Pipeline</strong>: DVC-orchestrated stages (ingest → validate → preprocess → validate → train).</li>
-<li><strong>Schema-Validated Data</strong>: Pandera schemas enforce data integrity, structural constraints, and types on raw and processed datasets with automated diagnostic reporting.</li>
-<li><strong>XGBoost &amp; Explainability</strong>: Imbalance-aware training with probability calibration, optimal F1 threshold selection, auto-generated model cards, and SHAP-based feature attribution.</li>
-<li><strong>Inference API</strong>: High-performance FastAPI application supporting batch CSV prediction, status checks, and downloadable SHAP explainability reports.</li>
-<li><strong>Interactive UI</strong>: Reactive Streamlit dashboard powered by Plotly for exploring customer churn risks, key KPIs, and localized risk drivers.</li>
-<li><strong>Containerized Orchestration</strong>: Podman and Podman-Compose architecture supporting multi-stage container builds, GHCR publishing, and isolated Pod networking.</li>
-<li><strong>Documentation</strong>: MkDocs Material site with API reference auto-generated from docstrings, published to GitHub Pages.</li>
+<li><strong>Reproducible pipeline</strong> — DVC-orchestrated stages (ingest → validate → preprocess → validate → train) with versioned data and model artifacts pushed to DagsHub.</li>
+<li><strong>Schema-validated data</strong> — Pandera schemas enforce structure and value constraints on both raw and processed datasets, with JSON diagnostic reports on failure.</li>
+<li><strong>XGBoost training</strong> — Class-imbalance-aware training (<code>scale_pos_weight</code>) with probability calibration, F1-optimal threshold selection, and an auto-generated model card.</li>
+<li><strong>Explainability</strong> — SHAP-based per-customer risk drivers and global feature importance, exported as dashboard-ready Parquet/JSON artifacts.</li>
+<li><strong>Batch inference API</strong> — FastAPI service for CSV upload, prediction, download, and SHAP explanation endpoints.</li>
+<li><strong>Interactive dashboard</strong> — Streamlit app for uploading data, viewing KPIs, risk distributions, and per-customer explanations.</li>
+<li><strong>Containerized deployment</strong> — Multi-stage, non-root Podman builds with required model/data artifacts baked in at build time; images built, security-scanned, and published to GHCR automatically via CI/CD.</li>
+<li><strong>Structured logging &amp; monitoring</strong> — <code>structlog</code>-based logging with rotating file handlers and optional Sentry integration.</li>
 </ul>
 <h2 id="tech-stack">Tech Stack<a class="headerlink" href="#tech-stack" title="Permanent link">&para;</a></h2>
 <table>
@@ -905,10 +906,10 @@
 <tbody>
 <tr>
 <td>Modeling</td>
-<td>XGBoost, Scikit-Learn, SHAP</td>
+<td>XGBoost, scikit-learn, SHAP</td>
 </tr>
 <tr>
-<td>Data Validation</td>
+<td>Data validation</td>
 <td>Pandera</td>
 </tr>
 <tr>
@@ -916,28 +917,32 @@
 <td>Pydantic Settings</td>
 </tr>
 <tr>
-<td>API &amp; Backend</td>
-<td>FastAPI, Uvicorn, Structlog, Sentry</td>
+<td>API</td>
+<td>FastAPI, Uvicorn</td>
 </tr>
 <tr>
 <td>Dashboard</td>
 <td>Streamlit, Plotly</td>
 </tr>
 <tr>
-<td>Pipeline &amp; Data Versioning</td>
-<td>DVC, KaggleHub</td>
+<td>Pipeline &amp; versioning</td>
+<td>DVC, DagsHub</td>
 </tr>
 <tr>
-<td>Containerization</td>
-<td>Podman, Podman-Compose, GHCR</td>
+<td>Logging &amp; monitoring</td>
+<td>structlog, Sentry</td>
+</tr>
+<tr>
+<td>Package management</td>
+<td>uv, Just</td>
+</tr>
+<tr>
+<td>Containerization &amp; deployment</td>
+<td>Podman, Podman Compose, GHCR, Render</td>
 </tr>
 <tr>
 <td>Quality</td>
-<td>Ruff, Ty, Pre-commit, Hadolint Just</td>
-</tr>
-<tr>
-<td>Docs &amp; Package management</td>
-<td>MkDocs Material, UV</td>
+<td>Ruff, Ty, Pytest, Pre-commit, Hadolint, Trivy</td>
 </tr>
 </tbody>
 </table>
@@ -945,7 +950,7 @@
 <ul>
 <li><a href="getting-started/">Getting Started</a> — install dependencies and configure the environment.</li>
 <li><a href="usage/">Usage</a> — run the training pipeline, serve the API, launch the dashboard.</li>
-<li><a href="deployment/">Deployment</a> — build and run with Podman, publish images to GHCR.</li>
+<li><a href="deployment/">Deployment</a> — run with Podman, automated CI/CD image publishing, and deploying to Render.</li>
 <li><strong>API Reference</strong> — auto-generated documentation for every module, grouped by layer (config, data, features, model, pipelines, api, client).</li>
 </ul>
 

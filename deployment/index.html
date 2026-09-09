@@ -521,10 +521,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#publishing-images-to-ghcr" class="md-nav__link">
+  <a href="#automated-image-publishing-cicd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Publishing images to GHCR
+        Automated image publishing (CI/CD)
       
     </span>
   </a>
@@ -532,10 +532,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#isolated-pod-deployment-podman-pods" class="md-nav__link">
+  <a href="#deploying-to-render" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Isolated pod deployment (Podman Pods)
+        Deploying to Render
       
     </span>
   </a>
@@ -843,10 +843,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#publishing-images-to-ghcr" class="md-nav__link">
+  <a href="#automated-image-publishing-cicd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Publishing images to GHCR
+        Automated image publishing (CI/CD)
       
     </span>
   </a>
@@ -854,10 +854,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#isolated-pod-deployment-podman-pods" class="md-nav__link">
+  <a href="#deploying-to-render" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Isolated pod deployment (Podman Pods)
+        Deploying to Render
       
     </span>
   </a>
@@ -886,7 +886,7 @@
 
 <h1 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h1>
 <h2 id="containerization">Containerization<a class="headerlink" href="#containerization" title="Permanent link">&para;</a></h2>
-<p>The API and dashboard each have a dedicated <code>Containerfile</code> and are orchestrated together via <code>compose.yaml</code>.</p>
+<p>The API and dashboard each have a dedicated <code>Containerfile</code> and are orchestrated together via <code>compose.yaml</code>. Required model and data artifacts (<code>models/preprocessor.joblib</code>, <code>models/model.ubj</code>, <code>models/card.json</code>, <code>data/raw/test.csv</code>) are copied into each image at build time, so neither container needs DVC/DagsHub credentials or network access at runtime.</p>
 <div class="highlight"><pre><span></span><code>just<span class="w"> </span>container-up<span class="w">     </span><span class="c1"># Build and start the application containers in detached mode</span>
 just<span class="w"> </span>container-down<span class="w">   </span><span class="c1"># Stop the application containers</span>
 
@@ -906,67 +906,30 @@ podman-compose<span class="w"> </span>down<span class="w">          </span><span
 <p>Containerfiles are validated with <code>hadolint</code>:</p>
 <div class="highlight"><pre><span></span><code>hadolint<span class="w"> </span>Containerfile.api<span class="w"> </span>Containerfile.dashboard
 </code></pre></div>
-<h2 id="publishing-images-to-ghcr">Publishing images to GHCR<a class="headerlink" href="#publishing-images-to-ghcr" title="Permanent link">&para;</a></h2>
-<p>Images are currently published manually. Automating this via CI/CD (build + push on version tag) is planned.</p>
-<div class="highlight"><pre><span></span><code>just<span class="w"> </span>ghcr-login<span class="w">              </span><span class="c1"># Log in to GHCR using GHCR_USER / GHCR_PAT</span>
-just<span class="w"> </span>ghcr-build<span class="w">              </span><span class="c1"># Build API &amp; Dashboard images with version and latest tags</span>
-just<span class="w"> </span>ghcr-push<span class="w">               </span><span class="c1"># Push version and latest images to GHCR</span>
-
-<span class="c1"># Without just command</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">GHCR_PAT</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>podman<span class="w"> </span>login<span class="w"> </span>ghcr.io<span class="w"> </span>-u<span class="w"> </span><span class="nv">$GHCR_USER</span><span class="w"> </span>--password-stdin
-
-podman<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>Containerfile.api<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-t<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-api:v0.1.0<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-t<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-api:latest<span class="w"> </span>.
-podman<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>Containerfile.dashboard<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-t<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-dashboard:v0.1.0<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-t<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-dashboard:latest<span class="w"> </span>.
-
-podman<span class="w"> </span>push<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-api:v0.1.0
-podman<span class="w"> </span>push<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-api:latest
-podman<span class="w"> </span>push<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-dashboard:v0.1.0
-podman<span class="w"> </span>push<span class="w"> </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-dashboard:latest
+<h2 id="automated-image-publishing-cicd">Automated image publishing (CI/CD)<a class="headerlink" href="#automated-image-publishing-cicd" title="Permanent link">&para;</a></h2>
+<p>Pushing a version tag (<code>v*.*.*</code>) — or a manual workflow dispatch — triggers <code>.github/workflows/build.yml</code>, which for each service (<code>api</code>, <code>dashboard</code>) in parallel:</p>
+<ol>
+<li>Pulls only the DVC artifacts that service needs (the model + preprocessor for the API, the demo CSV for the dashboard).</li>
+<li>Builds the image locally in the runner's Docker daemon.</li>
+<li>Scans it with <strong>Trivy</strong>, failing the job on any CRITICAL/HIGH severity CVE.</li>
+<li>If the scan passes, tags it with the semver version and short commit SHA and pushes it to GHCR.</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>tag<span class="w"> </span>v0.2.0
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.2.0
 </code></pre></div>
-<h2 id="isolated-pod-deployment-podman-pods">Isolated pod deployment (Podman Pods)<a class="headerlink" href="#isolated-pod-deployment-podman-pods" title="Permanent link">&para;</a></h2>
-<p>An alternative to <code>compose.yaml</code> — runs both services inside a single Podman pod sharing a port and network namespace, pulling published images from GHCR instead of building locally.</p>
-<div class="highlight"><pre><span></span><code>just<span class="w"> </span>pod-up<span class="w">                  </span><span class="c1"># Create pod, launch API and Dashboard containers</span>
-just<span class="w"> </span>pod-down<span class="w">                </span><span class="c1"># Stop running pod containers</span>
-just<span class="w"> </span>clean-pod<span class="w">               </span><span class="c1"># Force-remove the pod</span>
-
-<span class="c1"># Target specific steps or custom pod names</span>
-just<span class="w"> </span>pod-create<span class="w"> </span><span class="nv">pod</span><span class="o">=</span>churn-pod
-just<span class="w"> </span>pod-run-api<span class="w"> </span><span class="nv">pod</span><span class="o">=</span>churn-pod<span class="w"> </span><span class="nv">owner</span><span class="o">=</span><span class="nv">$GHCR_USER</span><span class="w"> </span><span class="nv">tag</span><span class="o">=</span>latest
-just<span class="w"> </span>pod-run-dashboard<span class="w"> </span><span class="nv">pod</span><span class="o">=</span>churn-pod<span class="w"> </span><span class="nv">owner</span><span class="o">=</span><span class="nv">$GHCR_USER</span><span class="w"> </span><span class="nv">tag</span><span class="o">=</span>latest
-
-<span class="c1"># Without just command</span>
-podman<span class="w"> </span>pod<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>churn-pod<span class="w"> </span>--userns<span class="o">=</span>keep-id<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span>-p<span class="w"> </span><span class="m">8501</span>:8501
-
-podman<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--pod<span class="w"> </span>churn-pod<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>churn-api<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--restart<span class="w"> </span>unless-stopped<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--env-file<span class="w"> </span>.env<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">FASTAPI_HOST</span><span class="o">=</span><span class="m">0</span>.0.0.0<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">FASTAPI_PORT</span><span class="o">=</span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>./data:/app/data:z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>./models:/app/models:ro,z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>./reports:/app/reports:z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>./logs:/app/logs:z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-api:latest
-
-podman<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--pod<span class="w"> </span>churn-pod<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>churn-dashboard<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--restart<span class="w"> </span>unless-stopped<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--env-file<span class="w"> </span>.env<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">FASTAPI_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">FASTAPI_PORT</span><span class="o">=</span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">API_BASE_URL</span><span class="o">=</span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>./data:/app/data:ro,z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>./models:/app/models:ro,z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>./reports:/app/reports:ro,z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>ghcr.io/<span class="si">${</span><span class="nv">GHCR_USER</span><span class="si">}</span>/churn-prediction-dashboard:latest
-</code></pre></div>
+<p>There's no manual <code>podman build</code>/<code>podman push</code> step — publishing an image now only happens through this pipeline.</p>
+<h2 id="deploying-to-render">Deploying to Render<a class="headerlink" href="#deploying-to-render" title="Permanent link">&para;</a></h2>
+<p>Both <code>Containerfile.api</code> and <code>Containerfile.dashboard</code> end in a shell-form <code>CMD</code> that reads Render's injected <code>$PORT</code> environment variable (falling back to <code>8000</code>/<code>8501</code> locally), so they run on Render's "Web Service" (Docker) deploy type with no changes needed:</p>
+<ol>
+<li>Create a new Web Service, connect the GitHub repo, and set <strong>Environment</strong> to <code>Docker</code>.</li>
+<li>Set <strong>Dockerfile Path</strong> to <code>Containerfile.api</code> (or <code>Containerfile.dashboard</code> for a second service).</li>
+<li>Leave the port field to Render's auto-detection — the container already binds to <code>$PORT</code>.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Environment variable validation</p>
+<p><code>Settings</code> currently requires <code>SENTRY_DSN</code>, <code>KAGGLE_USERNAME</code>/<code>KAGGLE_KEY</code>, and <code>DAGSHUB_ACCESS_ID</code> to be set whenever <code>ENVIRONMENT</code> is <code>staging</code> or <code>production</code> — even though, with artifacts baked into the image at build time, the running API/dashboard containers no longer actually use Kaggle or DagsHub credentials at all. Until that validator is scoped more narrowly (e.g. only required for the training pipeline), you'll need to either set those variables anyway on Render or set <code>ENVIRONMENT=development</code> there, even in a real deployment.</p>
+</div>
+<p>Since the dashboard talks to the API over HTTP, set the dashboard's <code>API_BASE_URL</code> environment variable on Render to the API service's public Render URL.</p>
 
 
 

@@ -513,10 +513,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Launch the dashboard">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#maintenance-dependency-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -524,11 +523,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -912,10 +906,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Launch the dashboard">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#maintenance-dependency-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -923,11 +916,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -986,8 +974,9 @@
 
 <h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
 <h2 id="run-the-training-pipeline">Run the training pipeline<a class="headerlink" href="#run-the-training-pipeline" title="Permanent link">&para;</a></h2>
-<p>Run all stages end-to-end via DVC (respects the dependency graph and caches unchanged stages):</p>
+<p>Run all stages end-to-end via DVC (respects the dependency graph and caches unchanged stages) and push the generated artifacts to DagsHub:</p>
 <div class="highlight"><pre><span></span><code>dvc<span class="w"> </span>repro
+dvc<span class="w"> </span>push<span class="w"> </span>-r<span class="w"> </span>origin
 </code></pre></div>
 <p>Or run an individual stage directly:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>churn_prediction.pipelines.training_pipeline<span class="w"> </span>&lt;stage&gt;
@@ -996,7 +985,7 @@
 <h2 id="serve-the-prediction-api">Serve the prediction API<a class="headerlink" href="#serve-the-prediction-api" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>just<span class="w"> </span>serve
 </code></pre></div>
-<p>Server will run at <code>http://localhost:8000</code> (Swagger docs at <code>http://localhost:8000/docs</code>).</p>
+<p>This starts the FastAPI app (default <code>http://localhost:8000</code>, docs at <code>/docs</code>).</p>
 <p>Key endpoints:</p>
 <table>
 <thead>
@@ -1034,7 +1023,7 @@
 <div class="highlight"><pre><span></span><code>churn-prediction
 </code></pre></div>
 <p>This starts the Streamlit application (talks to the FastAPI service configured via <code>API_BASE_URL</code>) for uploading data, reviewing predictions, and exploring SHAP-based risk drivers.</p>
-<h3 id="maintenance-dependency-management">Maintenance &amp; Dependency Management<a class="headerlink" href="#maintenance-dependency-management" title="Permanent link">&para;</a></h3>
+<h2 id="maintenance-dependency-management">Maintenance &amp; Dependency Management<a class="headerlink" href="#maintenance-dependency-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>just<span class="w"> </span>lock<span class="w">           </span><span class="c1"># Upgrade all project lockfile dependencies via uv</span>
 just<span class="w"> </span>hooks-update<span class="w">   </span><span class="c1"># Autoupdate pre-commit hook repositories</span>
 just<span class="w"> </span>hooks-run<span class="w">      </span><span class="c1"># Run pre-commit checks across all staged/unstaged files</span>
@@ -1045,26 +1034,22 @@ just<span class="w"> </span>hooks-run<span class="w">      </span><span class="c
 <span class="c1"># Or use command without just</span>
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-v
 </code></pre></div>
-<p>Linting is handled by <code>ruff</code>, type checking by <code>ty</code>, and Containerfiles are validated with <code>hadolint</code>. A pytest suite with an 85% coverage gate is configured in <code>pyproject.toml</code>.</p>
+<p>Linting is handled by <code>ruff</code>, type checking by <code>ty</code>, and Containerfiles are validated with <code>hadolint</code>. A pytest suite (unit, integration, e2e) with an 85% coverage gate is configured in <code>pyproject.toml</code>.</p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
-<p>Full project documentation — getting started, usage, deployment, and an API reference auto-generated from docstrings — is published at <strong><a href="https://krvipin15.github.io/churn-prediction/">krvipin15.github.io/churn-prediction</a></strong>.</p>
-<p>To work on the docs locally:</p>
-<div class="highlight"><pre><span></span><code>just<span class="w"> </span>docs-serve<span class="w">     </span><span class="c1"># Serve locally with live reload at http://127.0.0.1:5050</span>
-just<span class="w"> </span>docs-deploy<span class="w">    </span><span class="c1"># Publish the documentation to GitHub Pages</span>
+<div class="highlight"><pre><span></span><code>just<span class="w"> </span>docs-serve<span class="w">    </span><span class="c1"># Serve locally with live reload at http://127.0.0.1:5050</span>
+just<span class="w"> </span>docs-deploy<span class="w">   </span><span class="c1"># Publish the documentation to GitHub Pages</span>
 
 <span class="c1"># Without just command</span>
 uv<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>serve<span class="w"> </span>-a<span class="w"> </span><span class="m">127</span>.0.0.1:5050<span class="w"> </span>--strict
 uv<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>gh-deploy
 </code></pre></div>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>just<span class="w"> </span>clean-cache<span class="w">      </span><span class="c1"># Remove Python, pytest, ruff, mypy, pyright, and build caches</span>
-just<span class="w"> </span>clean-docs<span class="w">       </span><span class="c1"># Remove generated documentation site directory</span>
+<div class="highlight"><pre><span></span><code>just<span class="w"> </span>clean-cache<span class="w">      </span><span class="c1"># Remove Python, pytest, ruff, mypy, pyright, and build caches, and the generated docs site</span>
 just<span class="w"> </span>clean-logs<span class="w">       </span><span class="c1"># Remove log files in logs directory</span>
 just<span class="w"> </span>clean-generated<span class="w">  </span><span class="c1"># Remove generated models, datasets, and SHAP/training reports</span>
-just<span class="w"> </span>clean-all<span class="w">        </span><span class="c1"># Execute clean-cache, clean-generated, clean-logs, and clean-docs</span>
+just<span class="w"> </span>clean-all<span class="w">        </span><span class="c1"># Execute clean-cache, clean-generated, and clean-logs</span>
 
 just<span class="w"> </span>clean-container<span class="w">  </span><span class="c1"># Prune Podman containers, volumes, and images</span>
-just<span class="w"> </span>clean-pod<span class="w">        </span><span class="c1"># Force-remove the active Podman pod</span>
 </code></pre></div>
 
 
