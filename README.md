@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/krvipin15/churn-prediction/actions/workflows/ci.yml/badge.svg)](https://github.com/krvipin15/churn-prediction/actions/workflows/ci.yml)
 [![Security](https://github.com/krvipin15/churn-prediction/actions/workflows/security.yml/badge.svg)](https://github.com/krvipin15/churn-prediction/actions/workflows/security.yml)
+[![Build & Publish](https://github.com/krvipin15/churn-prediction/actions/workflows/build.yml/badge.svg)](https://github.com/krvipin15/churn-prediction/actions/workflows/build.yml)
 [![Docs](https://img.shields.io/badge/docs-mkdocs--material-blue)](https://krvipin15.github.io/churn-prediction/)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/downloads/release/python-3120/)
 [![License: MIT](https://img.shields.io/github/license/krvipin15/churn-prediction)](LICENSE)
@@ -10,18 +11,19 @@
 
 <img width="1920" height="1047" alt="image" src="https://github.com/user-attachments/assets/657959bb-76ea-4fdb-ae3f-55bc58f85d79" />
 
-Production-grade MLOps pipeline, serving infrastructure, and containerized deployment for predicting customer churn. The project covers the full end-to-end lifecycle — automated data ingestion, Pandera schema validation, feature engineering, XGBoost model training, SHAP explainability, FastAPI serving, interactive Streamlit UI, and multi-container orchestration with Podman.
+Production-grade MLOps pipeline, serving infrastructure, and containerized deployment for predicting customer churn. The project covers the full end-to-end lifecycle — automated data ingestion, Pandera schema validation, feature engineering, XGBoost model training, SHAP explainability, FastAPI serving, interactive Streamlit UI, and containerized deployment.
 
 **Full documentation:** [krvipin15.github.io/churn-prediction](https://krvipin15.github.io/churn-prediction/)
 
 ## Features
 
-- **Reproducible Pipeline**: DVC-orchestrated stages (ingest → validate → preprocess → validate → train), generated artifacts are pushed to DagsHub.
+- **Reproducible Pipeline**: DVC-orchestrated stages (ingest → validate → preprocess → validate → train), generated artifacts pushed to DagsHub.
 - **Schema-Validated Data**: Pandera schemas enforce data integrity, structural constraints, and types on raw and processed datasets with automated diagnostic reporting.
 - **XGBoost & Explainability**: Imbalance-aware training with probability calibration, optimal F1 threshold selection, auto-generated model cards, and SHAP-based feature attribution.
 - **Inference API**: High-performance FastAPI application supporting batch CSV prediction, status checks, and downloadable SHAP explainability reports.
 - **Interactive UI**: Reactive Streamlit dashboard powered by Plotly for exploring customer churn risks, key KPIs, and localized risk drivers.
-- **Containerized Orchestration**: Podman and Podman-Compose architecture supporting multi-stage container builds, GHCR publishing, and isolated Pod networking.
+- **Containerized Deployment**: Multi-stage, non-root Podman builds for both services, with required model/data artifacts baked in at build time.
+- **Automated CI/CD**: Matrix-built images, security-scanned with Trivy, and published to GHCR on every version tag.
 - **Documentation**: MkDocs Material site with API reference auto-generated from docstrings, published to GitHub Pages.
 
 ## Tech Stack
@@ -34,9 +36,9 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
 | API & Backend | FastAPI, Uvicorn, Structlog, Sentry |
 | Dashboard | Streamlit, Plotly |
 | Pipeline & Data Versioning | DVC, DagsHub, KaggleHub |
-| Containerization | Podman, Podman-Compose, GHCR |
-| Quality | Ruff, Ty, Pre-commit, Hadolint Just |
-| Docs & Package management | MkDocs Material, UV |
+| Containerization & Deployment | Podman, Podman-Compose, GHCR, Render |
+| Quality | Ruff, Ty, Pytest, Pre-commit, Hadolint, Trivy |
+| Docs & Package management | MkDocs Material, UV, Just |
 
 ## Project Structure
 
@@ -45,6 +47,7 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
     └── 📁.dvc
     └── 📁.github
         └── 📁workflows
+            ├── build.yml
             ├── ci.yml
             └── security.yml
     └── 📁.streamlit
@@ -54,6 +57,11 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
         └── 📁processed
         └── 📁raw
     └── 📁docs
+        └── 📁reference
+        ├── deployment.md
+        ├── getting-started.md
+        ├── index.md
+        └── usage.md
     └── 📁logs
     └── 📁models
     └── 📁reports
@@ -101,27 +109,10 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
             ├── __init__.py
             └── cli.py
     └── 📁tests
+        ├── conftest.py
         └── 📁e2e
-            └── test_cli.py
         └── 📁integration
-            ├── test_api_client.py
-            ├── test_app.py
-            ├── test_dashboard.py
-            ├── test_dependencies.py
-            ├── test_explain_route.py
-            ├── test_health_route.py
-            ├── test_main.py
-            ├── test_predict_route.py
-            ├── test_prediction_pipeline.py
-            └── test_training_pipeline.py
         └── 📁unit
-            ├── test_explainability.py
-            ├── test_inference_preprocessing.py
-            ├── test_inference.py
-            ├── test_ingestion.py
-            ├── test_train_preprocessing.py
-            ├── test_training.py
-            └── test_validation.py
     ├── .containerignore
     ├── .dvcignore
     ├── .env
@@ -133,7 +124,6 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
     ├── compose.yaml
     ├── Containerfile.api
     ├── Containerfile.dashboard
-    ├── dvc.lock
     ├── dvc.yaml
     ├── Justfile
     ├── LICENSE
@@ -144,6 +134,7 @@ Production-grade MLOps pipeline, serving infrastructure, and containerized deplo
     ├── SECURITY.md
     └── uv.lock
 ```
+
 ## Prerequisites
 
 - Python 3.12
@@ -189,15 +180,13 @@ cp .env.example .env
 |---|---|
 | `ENVIRONMENT` | `development`, `staging`, `production`, or `test` |
 | `LOGGER_NAME` | Name used for the application logger |
-| `SENTRY_DSN` | Sentry DSN (required in staging/production) |
-| `GHCR_USER` | GitHub username used to tag and log in to GHCR |
-| `GHCR_PAT` | GitHub personal access token (`write:packages` scope) used to log in to GHCR |
 | `KAGGLE_USERNAME` / `KAGGLE_KEY` | Kaggle API credentials (required in staging/production) |
-| `FASTAPI_HOST` / `FASTAPI_PORT` | Host and port for the FastAPI server |
+| `DAGSHUB_ACCESS_ID` | DagsHub access token used to authenticate the DVC remote (required in staging/production) |
+| `SENTRY_DSN` | Sentry DSN (required in staging/production) |
 
-Model, training, and schema hyperparameters live in [`params.yaml`](params.yaml) rather than environment variables.
+`FASTAPI_HOST` / `FASTAPI_PORT` can also be overridden but default to `0.0.0.0:8000` and aren't required. Model, training, and schema hyperparameters live in [`params.yaml`](params.yaml) rather than environment variables.
 
-To configure the DVC with remote storage on DagsHub:
+To initialize DVC and configure the DagsHub remote:
 
 ```bash
 just dvc-setup
@@ -207,7 +196,7 @@ just dvc-setup
 
 ### Run the training pipeline
 
-Run all stages end-to-end via DVC (respects the dependency graph and caches unchanged stages) and push the generated artifacts to Dagsh:
+Run all stages end-to-end via DVC (respects the dependency graph and caches unchanged stages) and push the generated artifacts to DagsHub:
 
 ```bash
 dvc repro
@@ -273,70 +262,16 @@ podman-compose ps            # View running container status
 podman-compose logs -f       # Stream container logs
 ```
 
-### Building & Publishing Container Images
+### Automated image publishing (CI/CD)
+
+Pushing a version tag (`v*.*.*`) triggers `.github/workflows/build.yml`, which builds both the API and dashboard images, pulls only the artifacts each service needs via DVC, scans each image with Trivy (blocking on any CRITICAL/HIGH CVE), and publishes semver + commit-SHA tagged images to GHCR:
 
 ```bash
-just ghcr-login              # Log in to GHCR using GHCR_USER / GHCR_PAT
-just ghcr-build              # Build API & Dashboard images with version and latest tags
-just ghcr-push               # Push version and latest images to GHCR
-
-# Without just command
-echo "${GHCR_PAT}" | podman login ghcr.io -u $GHCR_USER --password-stdin
-
-podman build -f Containerfile.api \
-  -t ghcr.io/${GHCR_USER}/churn-prediction-api:v0.1.0 \
-  -t ghcr.io/${GHCR_USER}/churn-prediction-api:latest .
-podman build -f Containerfile.dashboard \
-  -t ghcr.io/${GHCR_USER}/churn-prediction-dashboard:v0.1.0 \
-  -t ghcr.io/${GHCR_USER}/churn-prediction-dashboard:latest .
-
-podman push ghcr.io/${GHCR_USER}/churn-prediction-api:v0.1.0
-podman push ghcr.io/${GHCR_USER}/churn-prediction-api:latest
-podman push ghcr.io/${GHCR_USER}/churn-prediction-dashboard:v0.1.0
-podman push ghcr.io/${GHCR_USER}/churn-prediction-dashboard:latest
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
-### Isolated Pod Deployment (Podman Pods)
-
-```bash
-just pod-up                  # Create pod, launch API and Dashboard containers
-just pod-down                # Stop running pod containers
-just clean-pod               # Force-remove the pod
-
-# Target specific steps or custom pod names
-just pod-create pod=churn-pod
-just pod-run-api pod=churn-pod owner=$GHCR_USER tag=latest
-just pod-run-dashboard pod=churn-pod owner=$GHCR_USER tag=latest
-
-# Without just command
-podman pod create --name churn-pod --userns=keep-id -p 8000:8000 -p 8501:8501
-
-podman run -d \
-  --pod churn-pod \
-  --name churn-api \
-  --restart unless-stopped \
-  --env-file .env \
-  -e FASTAPI_HOST=0.0.0.0 \
-  -e FASTAPI_PORT=8000 \
-  -v ./data:/app/data:z \
-  -v ./models:/app/models:ro,z \
-  -v ./reports:/app/reports:z \
-  -v ./logs:/app/logs:z \
-  ghcr.io/${GHCR_USER}/churn-prediction-api:latest
-
-podman run -d \
-  --pod churn-pod \
-  --name churn-dashboard \
-  --restart unless-stopped \
-  --env-file .env \
-  -e FASTAPI_HOST=127.0.0.1 \
-  -e FASTAPI_PORT=8000 \
-  -e API_BASE_URL=http://127.0.0.1:8000 \
-  -v ./data:/app/data:ro,z \
-  -v ./models:/app/models:ro,z \
-  -v ./reports:/app/reports:ro,z \
-  ghcr.io/${GHCR_USER}/churn-prediction-dashboard:latest
-```
+There's no manual build/push step anymore — this replaced the earlier local `podman build`/`podman push` workflow.
 
 ## Documentation
 
@@ -362,19 +297,17 @@ just test          # Run the test suite with coverage reporting
 uv run pytest -v
 ```
 
-Linting and formatting are managed by `ruff`, type checking by `ty`, secret scanning via `detect-secrets`, and Containerfile validation via `hadolint`. A pytest suite with high coverage checks is configured in `pyproject.toml`.
+Linting and formatting are managed by `ruff`, type checking by `ty`, secret scanning via `detect-secrets`, and Containerfile validation via `hadolint`. A pytest suite (unit, integration, e2e) with an 85% coverage gate is configured in `pyproject.toml`.
 
 ## Cleanup
 
 ```bash
-just clean-cache      # Remove Python, pytest, ruff, mypy, pyright, and build caches
-just clean-docs       # Remove generated documentation site directory
+just clean-cache      # Remove Python, pytest, ruff, mypy, pyright, and build caches, and the generated docs site
 just clean-logs       # Remove log files in logs directory
 just clean-generated  # Remove generated models, datasets, and SHAP/training reports
-just clean-all        # Execute clean-cache, clean-generated, clean-logs, and clean-docs
+just clean-all        # Execute clean-cache, clean-generated, and clean-logs
 
 just clean-container  # Prune Podman containers, volumes, and images
-just clean-pod        # Force-remove the active Podman pod
 ```
 
 ## License
