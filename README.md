@@ -9,7 +9,7 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
-<img width="1920" height="1047" alt="image" src="https://github.com/user-attachments/assets/657959bb-76ea-4fdb-ae3f-55bc58f85d79" />
+<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/47a07bc8-b61a-4b31-9f04-0f54ce1006c4" />
 
 Production-grade MLOps pipeline, serving infrastructure, and containerized deployment for predicting customer churn. The project covers the full end-to-end lifecycle — automated data ingestion, Pandera schema validation, feature engineering, XGBoost model training, SHAP explainability, FastAPI serving, interactive Streamlit UI, and containerized deployment.
 
